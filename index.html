@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dental CDSS</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f4f4ef;--surface:#fff;--surface2:#f7f7f3;--border:#e2e1da;--border2:#c5c4bc;
+  --text:#1a1a17;--text2:#56564f;--text3:#8a8a82;
+  --blue-bg:#edf3fc;--blue-text:#1a478a;--blue-border:#adc5ee;
+  --green-bg:#ecf6f0;--green-text:#1a6338;--green-border:#9dd4b0;
+  --amber-bg:#fef7eb;--amber-text:#7a480e;--amber-border:#eec870;
+  --red-bg:#fdf0f0;--red-text:#8a1a1a;--red-border:#eea0a0;
+  --purple-bg:#f2effe;--purple-text:#4a2a9a;--purple-border:#c0aaf0;
+  --r:10px;--rs:6px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+/* ── Header ── */
+.hdr{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
+.hdr-icon{width:36px;height:36px;background:var(--blue-bg);border-radius:var(--rs);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.hdr-title{font-size:15px;font-weight:600;line-height:1.2}
+.hdr-sub{font-size:11px;color:var(--text2)}
+.bdg{display:inline-block;font-size:10px;padding:2px 6px;border-radius:20px;font-weight:500;margin-left:4px}
+.bdg-green{background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border)}
+.bdg-blue{background:var(--blue-bg);color:var(--blue-text);border:1px solid var(--blue-border)}
+
+/* ── Tabs ── */
+.tabs{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 18px;gap:0;position:sticky;top:61px;z-index:19}
+.tab{padding:11px 16px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;white-space:nowrap;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.tab.active{color:var(--blue-text);border-bottom-color:var(--blue-text)}
+.tab:hover:not(.active){color:var(--text)}
+
+/* ── Body ── */
+.body{max-width:860px;margin:0 auto;padding:18px 14px 60px}
+.pg{display:none}.pg.active{display:block}
+
+/* ── Cards ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.snum{width:20px;height:20px;border-radius:50%;background:var(--blue-bg);color:var(--blue-text);font-size:11px;font-weight:600;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+
+/* ── Grid ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+@media(max-width:580px){.g2,.g3,.g4{grid-template-columns:1fr}.tog-row{max-width:100%!important}}
+
+/* ── Fields ── */
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;color:var(--text2);font-weight:500}
+input[type=text],input[type=number],select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);font-family:inherit;color:var(--text);background:var(--surface);outline:none;transition:border .15s;font-size:max(16px,1em)}
+input:focus,select:focus{border-color:var(--blue-border)}
+.mt{margin-top:14px}
+
+/* ── Chips ── */
+.chip-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);font-size:13px;cursor:pointer;background:var(--surface);color:var(--text);user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:38px;display:inline-flex;align-items:center;transition:background .12s,border-color .12s,color .12s}
+.chip.sel{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue-border);font-weight:600}
+
+/* ── Toggles ── */
+.tog-row{display:flex;gap:8px;max-width:200px}
+.tog{flex:1;padding:10px 8px;border-radius:var(--rs);border:1.5px solid var(--border);font-size:14px;cursor:pointer;background:var(--surface);color:var(--text2);text-align:center;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:44px;display:flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s,color .12s}
+.tog.yes{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);font-weight:600}
+.tog.no{background:var(--surface2);color:var(--text2)}
+
+/* ── Buttons ── */
+.btn-primary{width:100%;padding:14px;font-size:16px;font-weight:600;border-radius:var(--r);border:none;background:var(--text);color:#fff;cursor:pointer;touch-action:manipulation;min-height:50px;transition:opacity .15s}
+.btn-primary:active{opacity:.8}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-secondary{padding:10px 18px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;touch-action:manipulation;min-height:42px;transition:background .12s;font-family:inherit}
+.btn-secondary:active{background:var(--surface2)}
+.btn-green{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);font-weight:500}
+.btn-red{background:var(--red-bg);color:var(--red-text);border-color:var(--red-border)}
+.btn-full{width:100%;margin-top:10px}
+
+/* ── Response ── */
+.res-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r)}
+.res-hdr{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.res-body{padding:18px;white-space:pre-wrap;font-size:14px;line-height:1.85;min-height:80px;word-break:break-word}
+.res-body.loading{color:var(--text3);font-style:italic}
+.disclaimer{margin:0 18px 14px;padding:10px 14px;background:var(--amber-bg);color:var(--amber-text);border-left:3px solid var(--amber-border);border-radius:0 var(--rs) var(--rs) 0;font-size:12px;line-height:1.5}
+.res-actions{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap}
+.fup-wrap{padding:14px 18px;border-top:1px solid var(--border)}
+.fup-label{font-size:12px;color:var(--text2);font-weight:500;margin-bottom:8px}
+.fup-row{display:flex;gap:8px}
+.fup-row input{flex:1}
+.fup-row button{padding:10px 16px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface);font-size:14px;cursor:pointer;white-space:nowrap;touch-action:manipulation;min-height:44px;font-family:inherit}
+
+/* ── History ── */
+.search-bar{display:flex;gap:10px;margin-bottom:14px}
+.search-bar input{flex:1}
+.case-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
+.case-card:hover{border-color:var(--blue-border)}
+.case-card-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
+.case-name{font-weight:600;font-size:15px}
+.case-date{font-size:12px;color:var(--text3);white-space:nowrap}
+.case-complaint{font-size:13px;color:var(--text2);margin-bottom:6px}
+.case-tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{font-size:11px;padding:2px 8px;border-radius:20px}
+.tag-red{background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border)}
+.tag-blue{background:var(--blue-bg);color:var(--blue-text);border:1px solid var(--blue-border)}
+.tag-green{background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border)}
+.tag-amber{background:var(--amber-bg);color:var(--amber-text);border:1px solid var(--amber-border)}
+.empty-state{text-align:center;padding:48px 20px;color:var(--text3)}
+.empty-state .es-icon{font-size:36px;margin-bottom:12px}
+.empty-state p{font-size:14px}
+
+/* ── Case detail modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.modal{background:var(--surface);border-radius:var(--r);width:100%;max-width:700px;margin:auto}
+.modal-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-hdr h2{font-size:16px;font-weight:600}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text2);padding:0 4px;line-height:1}
+.modal-body{padding:20px;white-space:pre-wrap;font-size:14px;line-height:1.8;max-height:70vh;overflow-y:auto}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+
+/* ── Analytics ── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px}
+.stat-label{font-size:11px;color:var(--text2);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.stat-val{font-size:28px;font-weight:600;line-height:1}
+.stat-sub{font-size:12px;color:var(--text3);margin-top:4px}
+.chart-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.chart-title{font-size:13px;font-weight:600;margin-bottom:14px;color:var(--text)}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
+.bar-label{width:160px;flex-shrink:0;color:var(--text2);text-align:right;font-size:12px;line-height:1.2}
+.bar-track{flex:1;height:22px;background:var(--surface2);border-radius:4px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:600;color:#fff;min-width:24px}
+.bar-fill.blue{background:#3a7bd5}
+.bar-fill.green{background:#2a9a5a}
+.bar-fill.amber{background:#d4881a}
+.bar-fill.red{background:#c43a3a}
+.bar-fill.purple{background:#6a3ab0}
+.bar-count{font-size:12px;color:var(--text2);width:24px;text-align:right;flex-shrink:0}
+.no-data{color:var(--text3);font-size:13px;padding:20px 0;text-align:center}
+
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="hdr">
+  <div class="hdr-icon">🦷</div>
+  <div>
+    <div class="hdr-title">Dental CDSS <span class="bdg bdg-green">AI-Powered</span><span class="bdg bdg-blue">Groq · LLaMA 3.3 70B</span></div>
+    <div class="hdr-sub">Clinical Decision Support · University of Mysore BCA Project</div>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <div class="tab active" data-tab="new-case" onclick="switchTab('new-case')">🩺 New Case</div>
+  <div class="tab" data-tab="history" onclick="switchTab('history')">📋 History</div>
+  <div class="tab" data-tab="analytics" onclick="switchTab('analytics')">📊 Analytics</div>
+</div>
+
+<div class="body">
+
+  <!-- ══ NEW CASE ══ -->
+  <div id="pg-new-case" class="pg active">
+
+    <!-- Form -->
+    <div id="form-view">
+
+      <div class="card">
+        <div class="card-title"><span class="snum">1</span> Patient details</div>
+        <div class="g3">
+          <div class="field"><label>Patient name</label><input type="text" id="name" placeholder="Full name" autocomplete="off"></div>
+          <div class="field"><label>Age (years)</label><input type="number" id="age" placeholder="e.g. 28" min="1" max="120" inputmode="numeric"></div>
+          <div class="field"><label>Weight (kg)</label><input type="number" id="weight" placeholder="e.g. 65" min="1" max="250" inputmode="numeric"></div>
+        </div>
+        <div class="g2 mt">
+          <div class="field"><label>Gender</label>
+            <select id="gender"><option value="">-- Select --</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+          <div class="field"><label>Known allergies</label><input type="text" id="allergies" placeholder="e.g. Penicillin, NSAIDs — or None"></div>
+        </div>
+        <div class="field mt"><label>Systemic conditions</label><input type="text" id="medical_history" placeholder="e.g. Diabetes, Hypertension, Hypothyroidism — or None"></div>
+        <div class="field mt"><label>Current medications</label><input type="text" id="medications" placeholder="e.g. Metformin 500mg, Amlodipine 5mg — or None"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="snum">2</span> Chief complaint & history</div>
+        <div class="g2">
+          <div class="field"><label>Chief complaint</label><input type="text" id="chief_complaint" placeholder="e.g. Pain in lower left molar"></div>
+          <div class="field"><label>Location</label><input type="text" id="location" placeholder="e.g. Lower left first molar, right jaw, neck"></div>
+        </div>
+        <div class="g2 mt">
+          <div class="field"><label>Duration</label><input type="text" id="duration" placeholder="e.g. 3 days, 2 weeks"></div>
+          <div class="field"><label>Onset</label>
+            <select id="onset"><option value="">-- Select --</option><option>Sudden</option><option>Gradual</option></select></div>
+        </div>
+        <div class="g2 mt">
+          <div class="field"><label>Pain severity (VAS 0–10)</label>
+            <select id="vas"><option value="">-- Select --</option><option>0 – No pain</option><option>1–3 – Mild</option><option>4–6 – Moderate</option><option>7–9 – Severe</option><option>10 – Worst possible</option></select></div>
+          <div class="field"><label>Pain pattern</label>
+            <select id="pain_pattern"><option value="">-- Select --</option><option>Constant</option><option>Intermittent</option><option>Episodic</option></select></div>
+        </div>
+
+        <div class="field mt">
+          <label>Pain character <span style="font-weight:400;color:var(--text3)">(tap to select, multiple allowed)</span></label>
+          <div class="chip-group" id="pain-chips">
+            <span class="chip" data-val="Sharp">Sharp</span>
+            <span class="chip" data-val="Dull">Dull</span>
+            <span class="chip" data-val="Throbbing">Throbbing</span>
+            <span class="chip" data-val="Burning">Burning</span>
+            <span class="chip" data-val="Pressure">Pressure</span>
+            <span class="chip" data-val="Aching">Aching</span>
+            <span class="chip" data-val="Shooting">Shooting</span>
+            <span class="chip" data-val="Stabbing">Stabbing</span>
+            <span class="chip" data-val="Radiating">Radiating</span>
+            <span class="chip" data-val="Lancinating">Lancinating</span>
+            <span class="chip" data-val="Pulsating">Pulsating</span>
+            <span class="chip" data-val="No pain">No pain</span>
+          </div>
+        </div>
+
+        <div class="field mt">
+          <label>Triggers <span style="font-weight:400;color:var(--text3)">(tap to select, multiple allowed)</span></label>
+          <div class="chip-group" id="trigger-chips">
+            <span class="chip" data-val="Hot">Hot</span>
+            <span class="chip" data-val="Cold">Cold</span>
+            <span class="chip" data-val="Sweet">Sweet</span>
+            <span class="chip" data-val="Biting/Chewing">Biting/Chewing</span>
+            <span class="chip" data-val="Spontaneous">Spontaneous</span>
+            <span class="chip" data-val="Touch/Palpation">Touch/Palpation</span>
+            <span class="chip" data-val="Lying down">Lying down</span>
+            <span class="chip" data-val="Morning (on waking)">Morning (on waking)</span>
+            <span class="chip" data-val="No trigger">No trigger</span>
+          </div>
+        </div>
+
+        <div class="field mt">
+          <label>Relieving factors</label>
+          <input type="text" id="relief" placeholder="e.g. Analgesics, cold water, nothing relieves">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="snum">3</span> Clinical findings</div>
+        <div class="g2" style="gap:16px">
+          <div class="field"><label>Swelling present?</label>
+            <div class="tog-row" id="tog-swelling"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
+          <div class="field"><label>Trismus (difficulty opening)?</label>
+            <div class="tog-row" id="tog-trismus"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
+          <div class="field"><label>Fever present?</label>
+            <div class="tog-row" id="tog-fever"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
+          <div class="field"><label>Lymph node enlargement?</label>
+            <div class="tog-row" id="tog-lymph"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
+          <div class="field"><label>Sinus / fistula present?</label>
+            <div class="tog-row" id="tog-sinus"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
+          <div class="field"><label>Mobility of tooth?</label>
+            <div class="tog-row" id="tog-mobility"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
+        </div>
+
+        <div id="swelling-detail" class="field mt hidden">
+          <label>Swelling details (size, consistency, tender, duration, fluctuant?)</label>
+          <input type="text" id="swelling_details" placeholder="e.g. 2×2 cm, soft, tender, fluctuant, 2 days">
+        </div>
+
+        <div class="field mt"><label>Oral ulcer or lesion?</label>
+          <div class="tog-row" id="tog-ulcer"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
+        <div id="ulcer-detail" class="field mt hidden">
+          <label>Ulcer details (size, duration, painful/painless, edges, base color)</label>
+          <input type="text" id="ulcer_details" placeholder="e.g. 1.5 cm, 3 weeks, painless, irregular edges, indurated base">
+        </div>
+
+        <div class="g2 mt">
+          <div class="field"><label>Percussion sensitivity</label>
+            <select id="percussion"><option value="Not tested">Not tested</option><option value="Negative">Negative</option><option value="Positive (tender to percussion)">Positive (tender to percussion)</option><option value="Grossly positive">Grossly positive</option></select></div>
+          <div class="field"><label>Palpation sensitivity</label>
+            <select id="palpation"><option value="Not tested">Not tested</option><option value="Negative">Negative</option><option value="Positive over apex">Positive over apex</option><option value="Positive over swelling">Positive over swelling</option></select></div>
+        </div>
+
+        <div class="g2 mt">
+          <div class="field"><label>Previous dental treatment?</label>
+            <input type="text" id="previous_treatment" placeholder="e.g. RCT 2 months ago, or None"></div>
+          <div class="field"><label>Recent trauma or injury?</label>
+            <input type="text" id="trauma" placeholder="e.g. Fall 1 week ago, or None"></div>
+        </div>
+
+        <div class="field mt"><label>Additional clinical notes</label>
+          <input type="text" id="extra_notes" placeholder="e.g. Deep caries visible on 36, discoloured tooth, halitosis present"></div>
+      </div>
+
+      <button class="btn-primary" id="analyze-btn" onclick="analyze()">🔍 Analyze Case</button>
+    </div>
+
+    <!-- Response -->
+    <div id="response-view" class="hidden">
+      <div class="res-card">
+        <div class="res-hdr">
+          <span style="font-weight:600;font-size:15px">Clinical Analysis</span>
+          <span id="patient-tag" style="font-size:13px;color:var(--text2);background:var(--surface2);padding:3px 10px;border-radius:20px;border:1px solid var(--border)"></span>
+        </div>
+        <div class="res-body" id="ai-response">Analyzing...</div>
+        <div class="disclaimer" id="disclaimer" style="display:none">
+          ⚠️ AI-assisted suggestion only. Final clinical decision rests with the treating dentist.
+        </div>
+        <div class="res-actions" id="res-actions" style="display:none">
+          <button class="btn-secondary btn-green" onclick="saveCase()">💾 Save Case</button>
+          <button class="btn-secondary" onclick="copyResponse()">📋 Copy Analysis</button>
+        </div>
+        <div class="fup-wrap">
+          <div class="fup-label">Ask a follow-up question about this case</div>
+          <div class="fup-row">
+            <input type="text" id="followup-input" placeholder="e.g. Should I refer? Alternative if penicillin allergy?">
+            <button onclick="askFollowup()">Ask ↵</button>
+          </div>
+        </div>
+      </div>
+      <button class="btn-secondary btn-full" onclick="newPatient()">+ Start New Patient</button>
+    </div>
+  </div>
+
+  <!-- ══ HISTORY ══ -->
+  <div id="pg-history" class="pg">
+    <div class="search-bar">
+      <input type="text" id="search-input" placeholder="Search by name, complaint, diagnosis..." oninput="renderHistory()">
+      <button class="btn-secondary" onclick="renderHistory()">Search</button>
+    </div>
+    <div id="history-list"></div>
+  </div>
+
+  <!-- ══ ANALYTICS ══ -->
+  <div id="pg-analytics" class="pg">
+    <div class="stat-grid" id="stat-grid"></div>
+    <div class="chart-section">
+      <div class="chart-title">Cases by pain character</div>
+      <div id="chart-pain"></div>
+    </div>
+    <div class="chart-section">
+      <div class="chart-title">Cases by trigger</div>
+      <div id="chart-trigger"></div>
+    </div>
+    <div class="chart-section">
+      <div class="chart-title">Red flag frequency</div>
+      <div id="chart-flags"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Case detail modal -->
+<div class="modal-overlay hidden" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h2 id="modal-title">Case Detail</h2>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary btn-red" onclick="deleteCase()">🗑 Delete</button>
+      <button class="btn-secondary" onclick="closeModalDirect()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+// API KEY — replace with your new key after regenerating
+// ══════════════════════════════════════════════════
+const GROQ_API_KEY = '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';
+
+// ══════════════════════════════════════════════════
+// IMPROVED SYSTEM PROMPT
+// ══════════════════════════════════════════════════
+const SYSTEM_PROMPT = `You are an experienced senior dental clinician and consultant with 20+ years of practice in India, helping house surgeons make accurate clinical decisions.
+
+APPROACH: Think step-by-step. Consider the full clinical picture — demographics, symptoms, timeline, triggers, clinical findings, and any red flags — before arriving at a diagnosis. Do NOT jump to conclusions based on one finding alone.
+
+═══════════════════════════════════════
+PHASE 1 — DIAGNOSIS
+═══════════════════════════════════════
+Provide:
+▸ PRIMARY DIAGNOSIS: State confidently with brief pathophysiology reasoning.
+▸ DIFFERENTIAL 1 & 2: List with distinguishing features that would differentiate from primary.
+▸ CONFIDENCE: High / Medium / Low — justify your confidence level.
+▸ KEY CONFIRMATORY SIGNS: Specific clinical/radiographic findings needed to confirm.
+▸ RED FLAGS: Explicitly call out any red flags present (painless ulcer >2 weeks, trismus with hard swelling, bilateral lymphadenopathy, night pain, unexplained weight loss, nerve paraesthesia, etc.)
+
+COMMON DIAGNOSTIC PITFALLS TO AVOID:
+- Do not diagnose irreversible pulpitis without spontaneous/lingering pain
+- Do not diagnose periodontitis without mobility/bone loss evidence
+- Cracked tooth syndrome: suspect if pain on biting/release, cold hypersensitivity
+- OSMF: suspect if trismus + burning + betel nut history
+- Dry socket: post-extraction severe pain day 2–4
+- TMD: bilateral/pre-auricular pain, clicking, limited opening without infection signs
+
+═══════════════════════════════════════
+PHASE 2 — INVESTIGATIONS & IMAGING
+═══════════════════════════════════════
+Categorise clearly:
+
+IMMEDIATE (before treatment):
+List only what's needed NOW, with clinical reason.
+
+ROUTINE RADIOGRAPHS (use judiciously):
+- IOPA: periapical assessment, single/few teeth, endodontic cases
+- OPG: multiple teeth, impactions, jaw lesions, trauma
+- CBCT: only when 2D is insufficient AND changes management (implants, impacted 3rd molars with nerve proximity, root resorption, complex endo)
+- Occlusal: palate, floor of mouth, salivary calculi
+
+ADVANCED IMAGING (only when clinically justified — state the justification):
+- MRI: soft tissue lesions, salivary gland tumours, TMJ internal derangement, nerve involvement, suspicious swellings
+- CT Scan: facial trauma/fractures, sinus pathology, large jaw cysts/tumours, bone lesions
+- Ultrasound: fluctuant swellings, lymph node assessment, salivary gland enlargement
+❌ Do NOT recommend MRI/CT for routine pulpitis, simple abscess, or pericoronitis.
+
+LAB INVESTIGATIONS (when specifically indicated):
+- CBC: systemic infection signs, immunocompromised patient
+- Blood glucose (fasting + PP): diabetes history, poor wound healing, recurrent infections
+- Coagulation profile (PT/INR, BT/CT): before surgical procedures
+- Serum calcium/phosphorus: in metabolic bone conditions
+- Biopsy: any ulcer not healed in 2 weeks, suspicious white/red/mixed lesion, firm swelling
+- Culture & sensitivity: chronic/non-resolving infections, immunocompromised
+- FNAC: suspicious lymph nodes, salivary gland masses
+
+═══════════════════════════════════════
+PHASE 3 — PRESCRIPTION
+═══════════════════════════════════════
+Generate a COMPLETE prescription with:
+▸ Drug name (GENERIC only, no brand names)
+▸ Dose calculated for the patient's weight (state calculation for antibiotics)
+▸ Route (oral/IV/topical)
+▸ Frequency and duration
+▸ Food instructions (with food/empty stomach)
+▸ Drug interactions with current medications listed
+▸ Allergy-triggered substitutions (state substitution and reason)
+
+STANDARD DENTAL FORMULARY (India):
+Analgesics: Ibuprofen 400mg TDS (avoid if GI issues/renal disease), Paracetamol 500-1000mg QID (safer in GI/renal), Diclofenac 50mg BD with food
+Antibiotics: Amoxicillin 500mg TDS x5-7 days (first line), Amoxicillin-Clavulanate 625mg BD (if resistant), Metronidazole 400mg TDS (anaerobes, add-on), Clindamycin 300mg TDS (penicillin allergy), Azithromycin 500mg OD x3 (penicillin allergy alternative)
+Antifungals: Fluconazole 150mg single dose or Clotrimazole 1% oral gel TDS
+Mouth rinses: Chlorhexidine 0.2% BD, Povidone-iodine 0.5% BD, Normal saline warm rinses
+Topical: Triamcinolone acetonide 0.1% oral paste (aphthous), Benzocaine gel (topical anaesthesia)
+
+DOSING RULES:
+- Amoxicillin in children: 25mg/kg/day in 3 divided doses
+- NSAIDs: contraindicated in renal disease, peptic ulcer, anticoagulant use
+- Metronidazole: avoid alcohol; nausea common; reduce dose in liver disease
+- Always prescribe PPI (Pantoprazole 40mg OD) if NSAIDs >5 days
+
+IMPORTANT SEQUENCING:
+⚠️ If blood glucose / INR / platelet count needed BEFORE a procedure — say so explicitly and do NOT prescribe for extraction until results reviewed.
+
+FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 PHASE 1 — DIAGNOSIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[content]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔬 PHASE 2 — INVESTIGATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[content]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💊 PHASE 3 — PRESCRIPTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[content]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ CLINICAL NOTES & WARNINGS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Any allergy alerts, drug interactions, referral advice, patient instructions]
+
+This is AI-assisted suggestion. Final clinical decision rests with the treating dentist.`;
+
+// ══════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════
+let history = [];
+let selectedPain = [];
+let selectedTriggers = [];
+let currentCaseData = null;
+let currentModalId = null;
+let db = null;
+
+// ══════════════════════════════════════════════════
+// INDEXEDDB
+// ══════════════════════════════════════════════════
+function initDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('DentalCDSS', 2);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('cases')) {
+        const store = d.createObjectStore('cases', { keyPath: 'id', autoIncrement: true });
+        store.createIndex('timestamp', 'timestamp');
+        store.createIndex('name', 'name');
+      }
+    };
+    req.onsuccess = e => { db = e.target.result; resolve(); };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function saveToDb(record) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('cases', 'readwrite');
+    const req = tx.objectStore('cases').add(record);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function getAllCases() {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('cases', 'readonly');
+    const req = tx.objectStore('cases').getAll();
+    req.onsuccess = () => resolve(req.result.reverse());
+    req.onerror = () => reject(req.error);
+  });
+}
+
+function deleteCaseById(id) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('cases', 'readwrite');
+    const req = tx.objectStore('cases').delete(id);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.pg').forEach(p => p.classList.toggle('active', p.id === 'pg-' + name));
+  if (name === 'history') renderHistory();
+  if (name === 'analytics') renderAnalytics();
+}
+
+// ══════════════════════════════════════════════════
+// CHIP & TOGGLE SETUP
+// ══════════════════════════════════════════════════
+function setupChips(groupId, arr) {
+  document.getElementById(groupId).querySelectorAll('.chip').forEach(chip => {
+    let touched = false;
+    chip.addEventListener('touchstart', () => { touched = true; }, { passive: true });
+    chip.addEventListener('touchend', e => { e.preventDefault(); toggleChip(chip, arr); }, { passive: false });
+    chip.addEventListener('click', () => { if (!touched) toggleChip(chip, arr); touched = false; });
+  });
+}
+
+function toggleChip(chip, arr) {
+  const v = chip.dataset.val;
+  if (chip.classList.contains('sel')) { chip.classList.remove('sel'); arr.splice(arr.indexOf(v), 1); }
+  else { chip.classList.add('sel'); arr.push(v); }
+}
+
+function setupToggle(rowId, onYes, onNo) {
+  const row = document.getElementById(rowId);
+  row.querySelectorAll('.tog').forEach(btn => {
+    let touched = false;
+    btn.addEventListener('touchstart', () => { touched = true; }, { passive: true });
+    btn.addEventListener('touchend', e => { e.preventDefault(); fireToggle(row, btn, onYes, onNo); }, { passive: false });
+    btn.addEventListener('click', () => { if (!touched) fireToggle(row, btn, onYes, onNo); touched = false; });
+  });
+}
+
+function fireToggle(row, btn, onYes, onNo) {
+  row.querySelectorAll('.tog').forEach(b => b.classList.remove('yes', 'no'));
+  const isYes = btn.dataset.val === 'yes';
+  btn.classList.add(isYes ? 'yes' : 'no');
+  if (isYes && onYes) onYes(); if (!isYes && onNo) onNo();
+}
+
+function togVal(rowId) { return document.querySelector(`#${rowId} .tog.yes`) ? 'yes' : 'no'; }
+
+// Init interactions
+setupChips('pain-chips', selectedPain);
+setupChips('trigger-chips', selectedTriggers);
+setupToggle('tog-swelling',
+  () => document.getElementById('swelling-detail').classList.remove('hidden'),
+  () => document.getElementById('swelling-detail').classList.add('hidden'));
+setupToggle('tog-trismus'); setupToggle('tog-fever');
+setupToggle('tog-lymph'); setupToggle('tog-sinus'); setupToggle('tog-mobility');
+setupToggle('tog-ulcer',
+  () => document.getElementById('ulcer-detail').classList.remove('hidden'),
+  () => document.getElementById('ulcer-detail').classList.add('hidden'));
+
+// ══════════════════════════════════════════════════
+// DATA GATHERING
+// ══════════════════════════════════════════════════
+function val(id) { return document.getElementById(id)?.value?.trim() || ''; }
+
+function gather() {
+  return {
+    name:               val('name') || 'Not given',
+    age:                val('age') || 'Not given',
+    weight:             val('weight') || 'Not given',
+    gender:             val('gender') || 'Not specified',
+    allergies:          val('allergies') || 'None',
+    medical_history:    val('medical_history') || 'None',
+    medications:        val('medications') || 'None',
+    chief_complaint:    val('chief_complaint'),
+    location:           val('location') || 'Not specified',
+    duration:           val('duration') || 'Not specified',
+    onset:              val('onset') || 'Not specified',
+    vas:                val('vas') || 'Not specified',
+    pain_pattern:       val('pain_pattern') || 'Not specified',
+    pain_type:          selectedPain.join(', ') || 'Not specified',
+    triggers:           selectedTriggers.join(', ') || 'None',
+    relief:             val('relief') || 'Not specified',
+    swelling:           togVal('tog-swelling'),
+    swelling_details:   val('swelling_details'),
+    trismus:            togVal('tog-trismus'),
+    fever:              togVal('tog-fever'),
+    lymph_nodes:        togVal('tog-lymph'),
+    sinus:              togVal('tog-sinus'),
+    mobility:           togVal('tog-mobility'),
+    ulcer:              togVal('tog-ulcer'),
+    ulcer_details:      val('ulcer_details'),
+    percussion:         val('percussion'),
+    palpation:          val('palpation'),
+    previous_treatment: val('previous_treatment') || 'None',
+    trauma:             val('trauma') || 'None',
+    extra_notes:        val('extra_notes') || 'None',
+  };
+}
+
+function buildPrompt(p) {
+  const redFlags = [];
+  if (p.swelling === 'yes' && p.trismus === 'yes') redFlags.push('Swelling + Trismus');
+  if (p.fever === 'yes') redFlags.push('Fever');
+  if (p.lymph_nodes === 'yes') redFlags.push('Lymphadenopathy');
+  if (p.ulcer === 'yes' && p.ulcer_details?.toLowerCase().includes('week')) redFlags.push('Oral ulcer (check duration)');
+  if (p.mobility === 'yes') redFlags.push('Tooth mobility');
+
+  return `PATIENT CLINICAL SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━
+Patient: ${p.name} | ${p.gender} | ${p.age} years | ${p.weight} kg
+Allergies: ${p.allergies}
+Systemic conditions: ${p.medical_history}
+Current medications: ${p.medications}
+${redFlags.length ? '⚠️ RED FLAGS NOTED: ' + redFlags.join(', ') : ''}
+
+HISTORY
+━━━━━━━━━━━━━━━━━━━━━━━━━
+Chief complaint: ${p.chief_complaint}
+Location: ${p.location}
+Duration: ${p.duration} | Onset: ${p.onset}
+Pain severity (VAS): ${p.vas}
+Pain pattern: ${p.pain_pattern}
+Pain character: ${p.pain_type}
+Triggers: ${p.triggers}
+Relieving factors: ${p.relief}
+Previous dental treatment: ${p.previous_treatment}
+Trauma history: ${p.trauma}
+
+CLINICAL EXAMINATION
+━━━━━━━━━━━━━━━━━━━━━━━━━
+Swelling: ${p.swelling}${p.swelling_details ? ' — ' + p.swelling_details : ''}
+Trismus: ${p.trismus}
+Fever: ${p.fever}
+Lymph node enlargement: ${p.lymph_nodes}
+Sinus / fistula: ${p.sinus}
+Tooth mobility: ${p.mobility}
+Percussion: ${p.percussion}
+Palpation: ${p.palpation}
+Oral ulcer/lesion: ${p.ulcer}${p.ulcer_details ? ' — ' + p.ulcer_details : ''}
+Additional notes: ${p.extra_notes}
+
+Please provide complete clinical analysis as per your three-phase format.
+Calculate all drug doses for a ${p.weight} kg patient.
+Account for all listed allergies (${p.allergies}) and systemic conditions (${p.medical_history}).
+Check interactions with current medications (${p.medications}).`;
+}
+
+// ══════════════════════════════════════════════════
+// GROQ API CALL
+// ══════════════════════════════════════════════════
+async function callGroq(messages) {
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.2,
+      max_tokens: 2000,
+      messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages]
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err?.error?.message || `Groq API error ${res.status}`);
+  }
+  return (await res.json()).choices[0].message.content;
+}
+
+// ══════════════════════════════════════════════════
+// ANALYZE
+// ══════════════════════════════════════════════════
+async function analyze() {
+  const p = gather();
+  if (!p.chief_complaint) { alert('Please enter the chief complaint.'); return; }
+
+  const btn = document.getElementById('analyze-btn');
+  btn.disabled = true; btn.textContent = 'Analyzing...';
+
+  document.getElementById('form-view').classList.add('hidden');
+  document.getElementById('response-view').classList.remove('hidden');
+  document.getElementById('patient-tag').textContent = `${p.name} · ${p.age}y · ${p.weight}kg`;
+
+  const respEl = document.getElementById('ai-response');
+  const disc = document.getElementById('disclaimer');
+  const acts = document.getElementById('res-actions');
+  respEl.className = 'res-body loading';
+  respEl.textContent = 'Analyzing with Groq AI (LLaMA 3.3 70B) — please wait...';
+  disc.style.display = 'none'; acts.style.display = 'none';
+
+  history = [{ role: 'user', content: buildPrompt(p) }];
+  currentCaseData = p;
+
+  try {
+    const reply = await callGroq(history);
+    history.push({ role: 'assistant', content: reply });
+    respEl.className = 'res-body';
+    respEl.textContent = reply;
+    disc.style.display = 'block';
+    acts.style.display = 'flex';
+    currentCaseData._response = reply;
+  } catch (e) {
+    respEl.className = 'res-body';
+    respEl.textContent = '❌ Error: ' + e.message + '\n\nPlease check your API key and internet connection.';
+  }
+
+  btn.disabled = false; btn.textContent = '🔍 Analyze Case';
+}
+
+// ══════════════════════════════════════════════════
+// FOLLOW-UP
+// ══════════════════════════════════════════════════
+async function askFollowup() {
+  const input = document.getElementById('followup-input');
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+
+  const respEl = document.getElementById('ai-response');
+  history.push({ role: 'user', content: q });
+  respEl.className = 'res-body loading';
+  respEl.textContent = 'Thinking...';
+
+  try {
+    const reply = await callGroq(history);
+    history.push({ role: 'assistant', content: reply });
+    respEl.className = 'res-body';
+    respEl.textContent = reply;
+  } catch (e) {
+    respEl.className = 'res-body';
+    respEl.textContent = '❌ Error: ' + e.message;
+  }
+}
+
+document.getElementById('followup-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') askFollowup();
+});
+
+// ══════════════════════════════════════════════════
+// SAVE CASE
+// ══════════════════════════════════════════════════
+async function saveCase() {
+  if (!currentCaseData || !currentCaseData._response) return;
+  const record = {
+    ...currentCaseData,
+    timestamp: new Date().toISOString(),
+    response: currentCaseData._response,
+  };
+  try {
+    await saveToDb(record);
+    const btn = document.querySelector('.btn-green');
+    btn.textContent = '✅ Saved!';
+    btn.disabled = true;
+    setTimeout(() => { btn.textContent = '💾 Save Case'; btn.disabled = false; }, 2000);
+  } catch(e) {
+    alert('Could not save: ' + e.message);
+  }
+}
+
+function copyResponse() {
+  const text = document.getElementById('ai-response').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelectorAll('.res-actions .btn-secondary')[1];
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => { btn.textContent = '📋 Copy Analysis'; }, 2000);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// NEW PATIENT
+// ══════════════════════════════════════════════════
+function newPatient() {
+  history = []; selectedPain.length = 0; selectedTriggers.length = 0; currentCaseData = null;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('sel'));
+  document.querySelectorAll('input[type=text], input[type=number]').forEach(i => { i.value = ''; });
+  document.querySelectorAll('select').forEach(s => { s.selectedIndex = 0; });
+  document.querySelectorAll('.tog').forEach(b => b.classList.remove('yes', 'no'));
+  document.querySelectorAll('.tog-row').forEach(row => {
+    const no = row.querySelector('[data-val="no"]'); if (no) no.classList.add('no');
+  });
+  ['swelling-detail', 'ulcer-detail'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  document.getElementById('ai-response').textContent = '';
+  document.getElementById('disclaimer').style.display = 'none';
+  document.getElementById('res-actions').style.display = 'none';
+  document.getElementById('response-view').classList.add('hidden');
+  document.getElementById('form-view').classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ══════════════════════════════════════════════════
+// HISTORY RENDERING
+// ══════════════════════════════════════════════════
+async function renderHistory() {
+  const list = document.getElementById('history-list');
+  const q = document.getElementById('search-input').value.toLowerCase();
+  let cases = await getAllCases();
+
+  if (q) cases = cases.filter(c =>
+    (c.name || '').toLowerCase().includes(q) ||
+    (c.chief_complaint || '').toLowerCase().includes(q) ||
+    (c.response || '').toLowerCase().includes(q)
+  );
+
+  if (!cases.length) {
+    list.innerHTML = `<div class="empty-state"><div class="es-icon">📋</div><p>${q ? 'No cases match your search.' : 'No cases saved yet. Analyze a case and click Save.'}</p></div>`;
+    return;
+  }
+
+  list.innerHTML = cases.map(c => {
+    const date = new Date(c.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    const time = new Date(c.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    const flags = [];
+    if (c.fever === 'yes') flags.push('<span class="tag tag-red">Fever</span>');
+    if (c.swelling === 'yes') flags.push('<span class="tag tag-amber">Swelling</span>');
+    if (c.trismus === 'yes') flags.push('<span class="tag tag-red">Trismus</span>');
+    if (c.lymph_nodes === 'yes') flags.push('<span class="tag tag-amber">Lymphadenopathy</span>');
+    if (c.ulcer === 'yes') flags.push('<span class="tag tag-red">Ulcer</span>');
+    const painTags = (c.pain_type || '').split(',').slice(0,2).map(p => `<span class="tag tag-blue">${p.trim()}</span>`).join('');
+    return `<div class="case-card" onclick="openModal(${c.id})">
+      <div class="case-card-hdr">
+        <span class="case-name">${c.name || 'Unknown'}</span>
+        <span class="case-date">${date} · ${time}</span>
+      </div>
+      <div class="case-complaint">${c.chief_complaint || '—'} · ${c.age}y ${c.gender || ''} · ${c.weight}kg</div>
+      <div class="case-tags">${flags.join('')}${painTags}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════════════
+async function openModal(id) {
+  const tx = db.transaction('cases', 'readonly');
+  const req = tx.objectStore('cases').get(id);
+  req.onsuccess = () => {
+    const c = req.result;
+    currentModalId = id;
+    document.getElementById('modal-title').textContent = `${c.name} · ${c.age}y · ${new Date(c.timestamp).toLocaleDateString('en-IN')}`;
+    document.getElementById('modal-body').textContent = c.response || 'No analysis saved.';
+    document.getElementById('modal-overlay').classList.remove('hidden');
+  };
+}
+
+function closeModal(e) {
+  if (e.target.id === 'modal-overlay') closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modal-overlay').classList.add('hidden');
+  currentModalId = null;
+}
+async function deleteCase() {
+  if (!currentModalId) return;
+  if (!confirm('Delete this case permanently?')) return;
+  await deleteCaseById(currentModalId);
+  closeModalDirect();
+  renderHistory();
+}
+
+// ══════════════════════════════════════════════════
+// ANALYTICS
+// ══════════════════════════════════════════════════
+async function renderAnalytics() {
+  const cases = await getAllCases();
+  const n = cases.length;
+
+  // Stats
+  const withFlags = cases.filter(c => c.fever === 'yes' || c.trismus === 'yes' || c.ulcer === 'yes').length;
+  const thisMonth = cases.filter(c => {
+    const d = new Date(c.timestamp); const now = new Date();
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).length;
+  const avgAge = n ? Math.round(cases.reduce((s, c) => s + (parseInt(c.age) || 0), 0) / n) : 0;
+
+  document.getElementById('stat-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Total Cases</div><div class="stat-val">${n}</div><div class="stat-sub">saved in database</div></div>
+    <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-val">${thisMonth}</div><div class="stat-sub">cases analyzed</div></div>
+    <div class="stat-card"><div class="stat-label">Red Flag Cases</div><div class="stat-val" style="color:var(--red-text)">${withFlags}</div><div class="stat-sub">${n ? Math.round(withFlags/n*100) : 0}% of total</div></div>
+    <div class="stat-card"><div class="stat-label">Avg Patient Age</div><div class="stat-val">${avgAge || '—'}</div><div class="stat-sub">years</div></div>`;
+
+  if (!n) {
+    ['chart-pain','chart-trigger','chart-flags'].forEach(id => {
+      document.getElementById(id).innerHTML = '<div class="no-data">No cases saved yet</div>';
+    });
+    return;
+  }
+
+  // Pain character chart
+  const painCount = {};
+  cases.forEach(c => (c.pain_type || '').split(',').forEach(p => {
+    const k = p.trim(); if (k && k !== 'Not specified') painCount[k] = (painCount[k] || 0) + 1;
+  }));
+  renderBarChart('chart-pain', painCount, n, ['blue','green','amber','red','purple']);
+
+  // Trigger chart
+  const trigCount = {};
+  cases.forEach(c => (c.triggers || '').split(',').forEach(t => {
+    const k = t.trim(); if (k && k !== 'None') trigCount[k] = (trigCount[k] || 0) + 1;
+  }));
+  renderBarChart('chart-trigger', trigCount, n, ['green','blue','amber','red','purple']);
+
+  // Red flags chart
+  const flagData = {
+    'Fever': cases.filter(c => c.fever === 'yes').length,
+    'Swelling': cases.filter(c => c.swelling === 'yes').length,
+    'Trismus': cases.filter(c => c.trismus === 'yes').length,
+    'Lymphadenopathy': cases.filter(c => c.lymph_nodes === 'yes').length,
+    'Oral Ulcer': cases.filter(c => c.ulcer === 'yes').length,
+    'Tooth Mobility': cases.filter(c => c.mobility === 'yes').length,
+    'Sinus/Fistula': cases.filter(c => c.sinus === 'yes').length,
+  };
+  renderBarChart('chart-flags', flagData, n, ['red','amber','red','amber','red','blue','green']);
+}
+
+function renderBarChart(containerId, data, total, colors) {
+  const container = document.getElementById(containerId);
+  const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  if (!sorted.length) { container.innerHTML = '<div class="no-data">No data</div>'; return; }
+  const max = sorted[0][1];
+  container.innerHTML = sorted.map(([label, count], i) => {
+    const pct = Math.round(count / max * 100);
+    const color = colors[i % colors.length];
+    return `<div class="bar-row">
+      <div class="bar-label">${label}</div>
+      <div class="bar-track"><div class="bar-fill ${color}" style="width:${pct}%">${count}</div></div>
+      <div class="bar-count">${Math.round(count/total*100)}%</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+initDB().then(() => {
+  console.log('Dental CDSS ready. Database initialized.');
+}).catch(e => {
+  console.error('DB init failed:', e);
+});
+</script>
+</body>
+</html>
