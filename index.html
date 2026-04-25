@@ -5,203 +5,1281 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dental CDSS</title>
 <style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   FUTURISTIC SQUARECIRCLE THEME - MINIMAL
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
 :root{
-  --bg:#f4f4ef;--surface:#fff;--surface2:#f7f7f3;--border:#e2e1da;--border2:#c5c4bc;
-  --text:#1a1a17;--text2:#56564f;--text3:#8a8a82;
-  --blue-bg:#edf3fc;--blue-text:#1a478a;--blue-border:#adc5ee;
-  --green-bg:#ecf6f0;--green-text:#1a6338;--green-border:#9dd4b0;
-  --amber-bg:#fef7eb;--amber-text:#7a480e;--amber-border:#eec870;
-  --red-bg:#fdf0f0;--red-text:#8a1a1a;--red-border:#eea0a0;
-  --purple-bg:#f2effe;--purple-text:#4a2a9a;--purple-border:#c0aaf0;
-  --r:10px;--rs:6px;
+  /* Base colors - Apple inspired */
+  --bg: #ffffff;
+  --bg-elev: #ffffff;
+  --bg-surface: #f5f5f7;
+  --bg-surface-2: #e8e8ed;
+
+  /* Borders */
+  --border: #d2d2d7;
+  --border-highlight: #86868b;
+  --border-glow: rgba(0, 0, 0, 0.1);
+
+  /* Text */
+  --text: #1d1d1f;
+  --text-dim: #6e6e73;
+  --text-muted: #aeaeb2;
+
+  /* Accent colors - monochrome */
+  --accent-primary: #000000;
+  --accent-primary-glow: rgba(0, 0, 0, 0.15);
+  --accent-success: #34c759;
+  --accent-success-glow: rgba(52, 199, 89, 0.2);
+  --accent-warning: #ff9f0a;
+  --accent-warning-glow: rgba(255, 159, 10, 0.2);
+  --accent-danger: #ff3b30;
+  --accent-danger-glow: rgba(255, 59, 48, 0.2);
+  --accent-info: #007aff;
+  --accent-info-glow: rgba(0, 122, 255, 0.2);
+
+  /* Shapes */
+  --r-lg: 16px;
+  --r-md: 12px;
+  --r-sm: 8px;
+  --r-full: 9999px;
+
+  /* Transitions */
+  --ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
 
-/* ── Header ── */
-.hdr{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20}
-.hdr-icon{width:36px;height:36px;background:var(--blue-bg);border-radius:var(--rs);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.hdr-title{font-size:15px;font-weight:600;line-height:1.2}
-.hdr-sub{font-size:11px;color:var(--text2)}
-.bdg{display:inline-block;font-size:10px;padding:2px 6px;border-radius:20px;font-weight:500;margin-left:4px}
-.bdg-green{background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border)}
-.bdg-blue{background:var(--blue-bg);color:var(--blue-text);border:1px solid var(--blue-border)}
-
-/* ── Tabs ── */
-.tabs{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 18px;gap:0;position:sticky;top:61px;z-index:19}
-.tab{padding:11px 16px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s;white-space:nowrap;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.tab.active{color:var(--blue-text);border-bottom-color:var(--blue-text)}
-.tab:hover:not(.active){color:var(--text)}
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border-highlight);border-radius:var(--r-full)}
+::-webkit-scrollbar-thumb:hover{background:var(--accent-primary)}
 
 /* ── Body ── */
-.body{max-width:860px;margin:0 auto;padding:18px 14px 60px}
-.pg{display:none}.pg.active{display:block}
+body{
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Animated Background - Apple Style ── */
+.dental-bg{
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.dental-bg .bg-icon{
+  position: absolute;
+  font-size: 20px;
+  opacity: 0.06;
+  filter: grayscale(100%);
+  animation: float 25s infinite ease-in-out;
+  user-select: none;
+}
+
+.dental-bg .bg-icon:nth-child(1){ top: 10%; left: 5%; animation-delay: 0s; }
+.dental-bg .bg-icon:nth-child(2){ top: 20%; left: 80%; animation-delay: -4s; }
+.dental-bg .bg-icon:nth-child(3){ top: 40%; left: 15%; animation-delay: -8s; }
+.dental-bg .bg-icon:nth-child(4){ top: 60%; left: 85%; animation-delay: -12s; }
+.dental-bg .bg-icon:nth-child(5){ top: 80%; left: 25%; animation-delay: -16s; }
+.dental-bg .bg-icon:nth-child(6){ top: 30%; left: 50%; animation-delay: -20s; }
+
+@keyframes float{
+  0%, 100%{ transform: translateY(0) rotate(0deg); opacity: 0.04; }
+  33%{ transform: translateY(-30px) rotate(120deg); opacity: 0.08; }
+  66%{ transform: translateY(-15px) rotate(240deg); opacity: 0.06; }
+}
+
+/* Subtle mesh gradient */
+body::before{
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(circle at 15% 50%, rgba(0, 0, 0, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(0, 0, 0, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ── Header ── */
+.hdr{
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(40px) saturate(200%);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.hdr-icon{
+  width: 40px;
+  height: 40px;
+  background: var(--bg-surface);
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  transition: transform 0.4s var(--ease-elastic);
+}
+
+.hdr:hover .hdr-icon{transform: scale(1.05);}
+
+.hdr-settings-btn{
+  margin-left: auto;
+  width: 36px;
+  height: 36px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--text-dim);
+  transition: all 0.2s var(--ease-out);
+  flex-shrink: 0;
+}
+.hdr-settings-btn:hover{
+  background: var(--bg-surface-2);
+  border-color: var(--border-highlight);
+  color: var(--text);
+  transform: rotate(30deg);
+}
+
+/* ── API Key Modal ── */
+.api-modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.api-modal-overlay.hidden{display:none;}
+.api-modal{
+  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-elev) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+.api-modal-hdr{
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, rgba(0,0,0,0.04) 0%, transparent 100%);
+}
+.api-modal-hdr h3{
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.api-modal-body{ padding: 20px; }
+.api-modal-body p{
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+.api-key-input-row{
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.api-key-input-row input{
+  flex: 1;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+.api-status{
+  font-size: 12px;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+.api-status.using-default{
+  background: rgba(52,199,89,0.12);
+  color: var(--accent-success);
+  border: 1px solid rgba(52,199,89,0.25);
+}
+.api-status.using-custom{
+  background: rgba(0,122,255,0.12);
+  color: var(--accent-info);
+  border: 1px solid rgba(0,122,255,0.25);
+}
+.api-modal-footer{
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  background: var(--bg-surface-2);
+}
+
+.hdr-title{
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.hdr-sub{
+  font-size: 11px;
+  color: var(--text-dim);
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.bdg{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: var(--r-full);
+  margin-left: 6px;
+  background: var(--bg-surface);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+
+/* ── Tabs ── */
+.tabs{
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(40px) saturate(200%);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  padding: 0 24px;
+  gap: 8px;
+  position: sticky;
+  top: 58px;
+  z-index: 99;
+}
+
+.tab{
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-radius: var(--r-full);
+  transition: all 0.2s var(--ease-out);
+  position: relative;
+}
+
+.tab:hover:not(.active){
+  color: var(--text);
+  background: var(--bg-surface);
+}
+
+.tab.active{
+  color: var(--text);
+  background: var(--bg-surface);
+}
+
+/* ── Body ── */
+.body{
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+
+.pg{display: none; opacity: 0; transform: translateY(10px);}
+.pg.active{display: block; animation: fadeInUp 0.4s var(--ease-out) forwards;}
+
+@keyframes fadeInUp{
+  to{opacity: 1; transform: translateY(0);}
+}
 
 /* ── Cards ── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px}
-.card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.snum{width:20px;height:20px;border-radius:50%;background:var(--blue-bg);color:var(--blue-text);font-size:11px;font-weight:600;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.card{
+  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-elev) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s var(--ease-out);
+}
+
+.card::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--border-highlight) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.card:hover{
+  border-color: var(--border-highlight);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.card:hover::before{opacity: 1;}
+
+.card-title{
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.snum{
+  width: 24px;
+  height: 24px;
+  border-radius: var(--r-md);
+  background: var(--accent-primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px var(--accent-primary-glow);
+}
 
 /* ── Grid ── */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
-@media(max-width:580px){.g2,.g3,.g4{grid-template-columns:1fr}.tog-row{max-width:100%!important}}
+@media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}.tog-row{max-width:100%!important}}
 
 /* ── Fields ── */
-.field{display:flex;flex-direction:column;gap:5px}
-.field label{font-size:12px;color:var(--text2);font-weight:500}
-input[type=text],input[type=number],select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--rs);font-family:inherit;color:var(--text);background:var(--surface);outline:none;transition:border .15s;font-size:max(16px,1em)}
-input:focus,select:focus{border-color:var(--blue-border)}
-.mt{margin-top:14px}
+.field{display:flex;flex-direction:column;gap:8px}
+.field label{
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.field label span{
+  font-weight: 400;
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+input[type=text],
+input[type=number],
+select{
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg-surface-2);
+  outline: none;
+  transition: all 0.2s var(--ease-out);
+  font-size: 15px;
+}
+
+input:focus,
+select:focus{
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-primary-glow);
+  background: var(--bg-surface);
+}
+
+input::placeholder{color: var(--text-muted);}
+
+.mt{margin-top:16px}
 
 /* ── Chips ── */
-.chip-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.chip{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);font-size:13px;cursor:pointer;background:var(--surface);color:var(--text);user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:38px;display:inline-flex;align-items:center;transition:background .12s,border-color .12s,color .12s}
-.chip.sel{background:var(--blue-bg);color:var(--blue-text);border-color:var(--blue-border);font-weight:600}
+.chip-group{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.chip{
+  padding: 10px 18px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  font-size: 13px;
+  cursor: pointer;
+  background: var(--bg-surface-2);
+  color: var(--text-dim);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipipulation;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease-elastic);
+  position: relative;
+  overflow: hidden;
+}
+
+.chip:hover{
+  border-color: var(--border-highlight);
+  transform: scale(1.02);
+}
+
+.chip:active{transform: scale(0.95);}
+
+.chip.sel{
+  background: var(--accent-primary);
+  color: #fff;
+  border-color: transparent;
+  font-weight: 600;
+  box-shadow: 0 4px 16px var(--accent-primary-glow);
+}
 
 /* ── Toggles ── */
-.tog-row{display:flex;gap:8px;max-width:200px}
-.tog{flex:1;padding:10px 8px;border-radius:var(--rs);border:1.5px solid var(--border);font-size:14px;cursor:pointer;background:var(--surface);color:var(--text2);text-align:center;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:44px;display:flex;align-items:center;justify-content:center;transition:background .12s,border-color .12s,color .12s}
-.tog.yes{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);font-weight:600}
-.tog.no{background:var(--surface2);color:var(--text2)}
+.tog-row{
+  display: flex;
+  gap: 6px;
+  max-width: 200px;
+  background: var(--bg-surface-2);
+  padding: 4px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+
+.tog{
+  flex: 1;
+  padding: 10px 8px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-dim);
+  text-align: center;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease-elastic);
+  position: relative;
+  overflow: hidden;
+}
+
+.tog:hover{color: var(--text);}
+.tog:active{transform: scale(0.95);}
+
+.tog.yes{
+  background: var(--accent-success);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 2px 12px var(--accent-success-glow);
+}
+
+.tog.no{background: transparent;color: var(--text-dim);}
 
 /* ── Buttons ── */
-.btn-primary{width:100%;padding:14px;font-size:16px;font-weight:600;border-radius:var(--r);border:none;background:var(--text);color:#fff;cursor:pointer;touch-action:manipulation;min-height:50px;transition:opacity .15s}
-.btn-primary:active{opacity:.8}
-.btn-primary:disabled{opacity:.4;cursor:not-allowed}
-.btn-secondary{padding:10px 18px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;cursor:pointer;touch-action:manipulation;min-height:42px;transition:background .12s;font-family:inherit}
-.btn-secondary:active{background:var(--surface2)}
-.btn-green{background:var(--green-bg);color:var(--green-text);border-color:var(--green-border);font-weight:500}
-.btn-red{background:var(--red-bg);color:var(--red-text);border-color:var(--red-border)}
-.btn-full{width:100%;margin-top:10px}
+.btn-primary{
+  width: 100%;
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--r-md);
+  border: none;
+  background: var(--accent-primary);
+  color: #fff;
+  cursor: pointer;
+  touch-action: manipulation;
+  min-height: 54px;
+  transition: all 0.2s var(--ease-elastic);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px var(--accent-primary-glow);
+}
 
-/* ── Response ── */
-.res-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r)}
-.res-hdr{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
-.res-body{padding:18px;white-space:pre-wrap;font-size:14px;line-height:1.85;min-height:80px;word-break:break-word}
-.res-body.loading{color:var(--text3);font-style:italic}
-.disclaimer{margin:0 18px 14px;padding:10px 14px;background:var(--amber-bg);color:var(--amber-text);border-left:3px solid var(--amber-border);border-radius:0 var(--rs) var(--rs) 0;font-size:12px;line-height:1.5}
-.res-actions{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap}
-.fup-wrap{padding:14px 18px;border-top:1px solid var(--border)}
-.fup-label{font-size:12px;color:var(--text2);font-weight:500;margin-bottom:8px}
-.fup-row{display:flex;gap:8px}
-.fup-row input{flex:1}
-.fup-row button{padding:10px 16px;border-radius:var(--rs);border:1px solid var(--border2);background:var(--surface);font-size:14px;cursor:pointer;white-space:nowrap;touch-action:manipulation;min-height:44px;font-family:inherit}
+.btn-primary::before{
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s var(--ease-out), height 0.4s var(--ease-out);
+}
+
+.btn-primary:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px var(--accent-primary-glow);
+}
+
+.btn-primary:active{
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-primary:active::before{
+  width: 300px;
+  height: 300px;
+}
+
+.btn-primary:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary{
+  padding: 12px 20px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--bg-surface-2);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  touch-action: manipulation;
+  min-height: 44px;
+  transition: all 0.2s var(--ease-out);
+  font-family: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-secondary:hover{
+  border-color: var(--border-highlight);
+  background: var(--bg-surface);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active{
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-green{
+  background: var(--accent-success);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 12px var(--accent-success-glow);
+}
+
+.btn-green:hover{
+  box-shadow: 0 4px 20px var(--accent-success-glow);
+}
+
+.btn-red{
+  background: var(--accent-danger);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 12px var(--accent-danger-glow);
+}
+
+.btn-full{width:100%;margin-top:16px}
+
+/* ── Response Card ── */
+.res-card{
+  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-elev) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  animation: slideIn 0.4s var(--ease-out);
+}
+
+@keyframes slideIn{
+  from{opacity: 0; transform: translateY(20px);}
+  to{opacity: 1; transform: translateY(0);}
+}
+
+.res-hdr{
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, transparent 100%);
+}
+
+.res-hdr span:first-child{
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+}
+
+#patient-tag{
+  font-size: 12px;
+  color: var(--text-dim);
+  background: var(--bg-surface-2);
+  padding: 6px 14px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  font-weight: 500;
+}
+
+.res-body{
+  padding: 24px;
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.9;
+  min-height: 120px;
+  word-break: break-word;
+  color: var(--text);
+}
+
+.res-body.loading{
+  color: var(--text-muted);
+  font-style: italic;
+  position: relative;
+}
+
+.res-body.loading::after{
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+  animation: loadingBar 1.5s infinite;
+}
+
+@keyframes loadingBar{
+  0%{transform: translateX(-100%);}
+  100%{transform: translateX(100%);}
+}
+
+.disclaimer{
+  margin: 0 24px 16px;
+  padding: 14px 18px;
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--accent-warning);
+  border-left: 3px solid var(--accent-warning);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  font-size: 12px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.res-actions{
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: var(--bg-surface-2);
+}
+
+.fup-wrap{
+  padding: 20px 24px;
+  border-top: 1px solid var(--border);
+  background: linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.05) 100%);
+}
+
+.fup-label{
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.fup-row{display: flex; gap: 10px;}
+
+.fup-row input{
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--bg-surface-2);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s var(--ease-out);
+}
+
+.fup-row input:focus{
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-primary-glow);
+}
+
+.fup-row button{
+  padding: 12px 24px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--bg-surface-2);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  touch-action: manipulation;
+  min-height: 46px;
+  font-family: inherit;
+  transition: all 0.2s var(--ease-out);
+}
+
+.fup-row button:hover{
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  transform: translateY(-1px);
+}
+
+.fup-row button:active{transform: translateY(0) scale(0.98);}
 
 /* ── History ── */
-.search-bar{display:flex;gap:10px;margin-bottom:14px}
-.search-bar input{flex:1}
-.case-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
-.case-card:hover{border-color:var(--blue-border)}
-.case-card-hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
-.case-name{font-weight:600;font-size:15px}
-.case-date{font-size:12px;color:var(--text3);white-space:nowrap}
-.case-complaint{font-size:13px;color:var(--text2);margin-bottom:6px}
-.case-tags{display:flex;flex-wrap:wrap;gap:5px}
-.tag{font-size:11px;padding:2px 8px;border-radius:20px}
-.tag-red{background:var(--red-bg);color:var(--red-text);border:1px solid var(--red-border)}
-.tag-blue{background:var(--blue-bg);color:var(--blue-text);border:1px solid var(--blue-border)}
-.tag-green{background:var(--green-bg);color:var(--green-text);border:1px solid var(--green-border)}
-.tag-amber{background:var(--amber-bg);color:var(--amber-text);border:1px solid var(--amber-border)}
-.empty-state{text-align:center;padding:48px 20px;color:var(--text3)}
-.empty-state .es-icon{font-size:36px;margin-bottom:12px}
-.empty-state p{font-size:14px}
+.search-bar{
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
 
-/* ── Case detail modal ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
-.modal{background:var(--surface);border-radius:var(--r);width:100%;max-width:700px;margin:auto}
-.modal-hdr{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.modal-hdr h2{font-size:16px;font-weight:600}
-.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--text2);padding:0 4px;line-height:1}
-.modal-body{padding:20px;white-space:pre-wrap;font-size:14px;line-height:1.8;max-height:70vh;overflow-y:auto}
-.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+.search-bar input{
+  flex: 1;
+  padding: 14px 18px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--bg-surface-2);
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s var(--ease-out);
+}
+
+.search-bar input:focus{
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-primary-glow);
+}
+
+.case-card{
+  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-elev) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+.case-card::before{
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--accent-primary) 0%, #8b5cf6 100%);
+  transform: scaleY(0);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.case-card:hover{
+  border-color: var(--border-highlight);
+  transform: translateX(4px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.case-card:hover::before{transform: scaleY(1);}
+
+.case-card-hdr{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.case-name{
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.case-date{
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.case-complaint{
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.case-tags{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag{
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: var(--r-full);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid;
+}
+
+.tag-red{
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--accent-danger);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.tag-blue{
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--accent-primary);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.tag-green{
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--accent-success);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.tag-amber{
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent-warning);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.empty-state{
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state .es-icon{
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state p{
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+/* ── Modal ── */
+.modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.modal-overlay:not(.hidden){opacity: 1;}
+
+.modal{
+  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-elev) 100%);
+  border-radius: var(--r-lg);
+  width: 100%;
+  max-width: 720px;
+  margin: auto;
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  transform: scale(0.95) translateY(20px);
+  transition: transform 0.3s var(--ease-elastic);
+}
+
+.modal-overlay:not(.hidden) .modal{
+  transform: scale(1) translateY(0);
+}
+
+.modal-hdr{
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.08) 0%, transparent 100%);
+}
+
+.modal-hdr h2{
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.modal-close{
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-dim);
+  font-size: 18px;
+  transition: all 0.2s var(--ease-out);
+  padding: 0;
+}
+
+.modal-close:hover{
+  background: var(--accent-danger);
+  border-color: var(--accent-danger);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.modal-body{
+  padding: 24px;
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.85;
+  max-height: 65vh;
+  overflow-y: auto;
+  color: var(--text);
+}
+
+.modal-footer{
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  background: var(--bg-surface-2);
+}
 
 /* ── Analytics ── */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:14px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px}
-.stat-label{font-size:11px;color:var(--text2);font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
-.stat-val{font-size:28px;font-weight:600;line-height:1}
-.stat-sub{font-size:12px;color:var(--text3);margin-top:4px}
-.chart-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px}
-.chart-title{font-size:13px;font-weight:600;margin-bottom:14px;color:var(--text)}
-.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
-.bar-label{width:160px;flex-shrink:0;color:var(--text2);text-align:right;font-size:12px;line-height:1.2}
-.bar-track{flex:1;height:22px;background:var(--surface2);border-radius:4px;overflow:hidden;position:relative}
-.bar-fill{height:100%;border-radius:4px;transition:width .6s ease;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:600;color:#fff;min-width:24px}
-.bar-fill.blue{background:#3a7bd5}
-.bar-fill.green{background:#2a9a5a}
-.bar-fill.amber{background:#d4881a}
-.bar-fill.red{background:#c43a3a}
-.bar-fill.purple{background:#6a3ab0}
-.bar-count{font-size:12px;color:var(--text2);width:24px;text-align:right;flex-shrink:0}
-.no-data{color:var(--text3);font-size:13px;padding:20px 0;text-align:center}
+.stat-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
 
+.stat-card{
+  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-elev) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s var(--ease-out);
+}
+
+.stat-card::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-success), var(--accent-warning));
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-out);
+}
+
+.stat-card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card:hover::before{opacity: 1;}
+
+.stat-label{
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 8px;
+}
+
+.stat-val{
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--text) 0%, var(--text-dim) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-sub{
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+.chart-section{
+  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-elev) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.chart-title{
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 20px;
+  letter-spacing: -0.01em;
+}
+
+.bar-row{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.bar-label{
+  width: 150px;
+  flex-shrink: 0;
+  color: var(--text-dim);
+  text-align: right;
+  font-size: 12px;
+  line-height: 1.3;
+  font-weight: 500;
+}
+
+.bar-track{
+  flex: 1;
+  height: 28px;
+  background: var(--bg-surface-2);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--border);
+}
+
+.bar-fill{
+  height: 100%;
+  border-radius: var(--r-md);
+  transition: width 0.8s var(--ease-out);
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  min-width: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-fill::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+}
+
+.bar-fill.blue{background: var(--accent-info);}
+.bar-fill.green{background: var(--accent-success);}
+.bar-fill.amber{background: var(--accent-warning);}
+.bar-fill.red{background: var(--accent-danger);}
+.bar-fill.purple{background: var(--accent-primary);}
+
+.bar-count{
+  font-size: 11px;
+  color: var(--text-muted);
+  width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+.no-data{
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 40px 0;
+  text-align: center;
+}
+
+/* ── Utility ── */
 .hidden{display:none!important}
+
+/* ── Ripple effect ── */
+.ripple{
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(0);
+  animation: rippleAnim 0.6s var(--ease-out);
+  pointer-events: none;
+}
+
+@keyframes rippleAnim{
+  to{transform: scale(4); opacity: 0;}
+}
 </style>
 </head>
 <body>
+
+<!-- Animated Dental Background -->
+<div class="dental-bg">
+  <span class="bg-icon">🦷</span>
+  <span class="bg-icon">🏥</span>
+  <span class="bg-icon">🔬</span>
+  <span class="bg-icon">💊</span>
+  <span class="bg-icon">🦷</span>
+  <span class="bg-icon">🏥</span>
+  <span class="bg-icon">🔍</span>
+  <span class="bg-icon">💉</span>
+  <span class="bg-icon">🦷</span>
+  <span class="bg-icon">🏥</span>
+  <span class="bg-icon">📋</span>
+  <span class="bg-icon">🔬</span>
+</div>
 
 <!-- Header -->
 <div class="hdr">
   <div class="hdr-icon">🦷</div>
   <div>
-    <div class="hdr-title">Dental CDSS <span class="bdg bdg-green">AI-Powered</span><span class="bdg bdg-blue">Groq · LLaMA 3.3 70B</span></div>
-    <div class="hdr-sub">Clinical Decision Support · University of Mysore BCA Project</div>
+    <div class="hdr-title">Dental CDSS <span class="bdg bdg-green">AI</span><span class="bdg bdg-blue">LLaMA 3.3</span></div>
+    <div class="hdr-sub">Clinical Decision Support System</div>
+  </div>
+  <button class="hdr-settings-btn" onclick="openApiModal()" title="API Key Settings">&#9881;</button>
+</div>
+
+<!-- API Key Modal -->
+<div class="api-modal-overlay hidden" id="api-modal-overlay" onclick="closeApiModalOnBg(event)">
+  <div class="api-modal">
+    <div class="api-modal-hdr">
+      <h3>&#9881; API Key Settings</h3>
+      <button class="modal-close" onclick="closeApiModal()">&#x2715;</button>
+    </div>
+    <div class="api-modal-body">
+      <div id="api-status-badge" class="api-status using-default">&#x2705; Using built-in API key</div>
+      <p>Enter your own Groq API key below to use it instead of the built-in one. Your key is saved only in your browser's local storage.</p>
+      <div class="api-key-input-row">
+        <input type="password" id="api-key-input" placeholder="gsk_..." autocomplete="off" oninput="updateApiStatus()" />
+        <button class="btn-secondary" onclick="toggleKeyVisibility()" id="toggle-vis-btn" style="white-space:nowrap;min-height:50px">Show</button>
+      </div>
+      <p style="margin-top:-4px; font-size:11px; color:var(--text-muted);">Get a free Groq key at <strong>console.groq.com</strong></p>
+    </div>
+    <div class="api-modal-footer">
+      <button class="btn-secondary btn-red" onclick="clearApiKey()">Clear Key</button>
+      <button class="btn-secondary" onclick="closeApiModal()">Cancel</button>
+      <button class="btn-primary" style="width:auto;padding:12px 24px" onclick="saveApiKey()">Save Key</button>
+    </div>
   </div>
 </div>
 
 <!-- Tabs -->
 <div class="tabs">
-  <div class="tab active" data-tab="new-case" onclick="switchTab('new-case')">🩺 New Case</div>
-  <div class="tab" data-tab="history" onclick="switchTab('history')">📋 History</div>
-  <div class="tab" data-tab="analytics" onclick="switchTab('analytics')">📊 Analytics</div>
+  <div class="tab active" data-tab="new-case" onclick="switchTab('new-case')">New Case</div>
+  <div class="tab" data-tab="history" onclick="switchTab('history')">History</div>
+  <div class="tab" data-tab="analytics" onclick="switchTab('analytics')">Analytics</div>
+  <div class="tab" data-tab="settings" onclick="switchTab('settings')">⚙️ Settings</div>
 </div>
 
 <div class="body">
 
-  <!-- ══ NEW CASE ══ -->
+  <!-- ═══ NEW CASE ═══ -->
   <div id="pg-new-case" class="pg active">
 
     <!-- Form -->
     <div id="form-view">
 
       <div class="card">
-        <div class="card-title"><span class="snum">1</span> Patient details</div>
+        <div class="card-title"><span class="snum">1</span> Patient Details</div>
         <div class="g3">
-          <div class="field"><label>Patient name</label><input type="text" id="name" placeholder="Full name" autocomplete="off"></div>
-          <div class="field"><label>Age (years)</label><input type="number" id="age" placeholder="e.g. 28" min="1" max="120" inputmode="numeric"></div>
-          <div class="field"><label>Weight (kg)</label><input type="number" id="weight" placeholder="e.g. 65" min="1" max="250" inputmode="numeric"></div>
+          <div class="field"><label>Patient Name</label><input type="text" id="name" placeholder="Full name" autocomplete="off"></div>
+          <div class="field"><label>Age</label><input type="number" id="age" placeholder="28" min="1" max="120" inputmode="numeric"></div>
+          <div class="field"><label>Weight (kg)</label><input type="number" id="weight" placeholder="65" min="1" max="250" inputmode="numeric"></div>
         </div>
         <div class="g2 mt">
           <div class="field"><label>Gender</label>
-            <select id="gender"><option value="">-- Select --</option><option>Male</option><option>Female</option><option>Other</option></select></div>
-          <div class="field"><label>Known allergies</label><input type="text" id="allergies" placeholder="e.g. Penicillin, NSAIDs — or None"></div>
+            <select id="gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+          <div class="field"><label>Allergies</label><input type="text" id="allergies" placeholder="Penicillin, NSAIDs or None"></div>
         </div>
-        <div class="field mt"><label>Systemic conditions</label><input type="text" id="medical_history" placeholder="e.g. Diabetes, Hypertension, Hypothyroidism — or None"></div>
-        <div class="field mt"><label>Current medications</label><input type="text" id="medications" placeholder="e.g. Metformin 500mg, Amlodipine 5mg — or None"></div>
+        <div class="field mt"><label>Systemic Conditions</label><input type="text" id="medical_history" placeholder="Diabetes, Hypertension or None"></div>
+        <div class="field mt"><label>Current Medications</label><input type="text" id="medications" placeholder="Metformin 500mg or None"></div>
       </div>
 
       <div class="card">
-        <div class="card-title"><span class="snum">2</span> Chief complaint & history</div>
+        <div class="card-title"><span class="snum">2</span> Chief Complaint & History</div>
         <div class="g2">
-          <div class="field"><label>Chief complaint</label><input type="text" id="chief_complaint" placeholder="e.g. Pain in lower left molar"></div>
-          <div class="field"><label>Location</label><input type="text" id="location" placeholder="e.g. Lower left first molar, right jaw, neck"></div>
+          <div class="field"><label>Chief Complaint</label><input type="text" id="chief_complaint" placeholder="Pain in lower left molar"></div>
+          <div class="field"><label>Location</label><input type="text" id="location" placeholder="Lower left first molar"></div>
         </div>
         <div class="g2 mt">
-          <div class="field"><label>Duration</label><input type="text" id="duration" placeholder="e.g. 3 days, 2 weeks"></div>
+          <div class="field"><label>Duration</label><input type="text" id="duration" placeholder="3 days"></div>
           <div class="field"><label>Onset</label>
-            <select id="onset"><option value="">-- Select --</option><option>Sudden</option><option>Gradual</option></select></div>
+            <select id="onset"><option value="">Select</option><option>Sudden</option><option>Gradual</option></select></div>
         </div>
         <div class="g2 mt">
-          <div class="field"><label>Pain severity (VAS 0–10)</label>
-            <select id="vas"><option value="">-- Select --</option><option>0 – No pain</option><option>1–3 – Mild</option><option>4–6 – Moderate</option><option>7–9 – Severe</option><option>10 – Worst possible</option></select></div>
-          <div class="field"><label>Pain pattern</label>
-            <select id="pain_pattern"><option value="">-- Select --</option><option>Constant</option><option>Intermittent</option><option>Episodic</option></select></div>
+          <div class="field"><label>Pain (VAS 0-10)</label>
+            <select id="vas"><option value="">Select</option><option>0 - No pain</option><option>1-3 - Mild</option><option>4-6 - Moderate</option><option>7-9 - Severe</option><option>10 - Worst</option></select></div>
+          <div class="field"><label>Pattern</label>
+            <select id="pain_pattern"><option value="">Select</option><option>Constant</option><option>Intermittent</option><option>Episodic</option></select></div>
         </div>
 
         <div class="field mt">
-          <label>Pain character <span style="font-weight:400;color:var(--text3)">(tap to select, multiple allowed)</span></label>
+          <label>Pain Character <span>(multiple)</span></label>
           <div class="chip-group" id="pain-chips">
             <span class="chip" data-val="Sharp">Sharp</span>
             <span class="chip" data-val="Dull">Dull</span>
@@ -219,132 +1297,189 @@ input:focus,select:focus{border-color:var(--blue-border)}
         </div>
 
         <div class="field mt">
-          <label>Triggers <span style="font-weight:400;color:var(--text3)">(tap to select, multiple allowed)</span></label>
+          <label>Triggers <span>(multiple)</span></label>
           <div class="chip-group" id="trigger-chips">
             <span class="chip" data-val="Hot">Hot</span>
             <span class="chip" data-val="Cold">Cold</span>
             <span class="chip" data-val="Sweet">Sweet</span>
-            <span class="chip" data-val="Biting/Chewing">Biting/Chewing</span>
+            <span class="chip" data-val="Biting/Chewing">Biting</span>
             <span class="chip" data-val="Spontaneous">Spontaneous</span>
-            <span class="chip" data-val="Touch/Palpation">Touch/Palpation</span>
+            <span class="chip" data-val="Touch/Palpation">Touch</span>
             <span class="chip" data-val="Lying down">Lying down</span>
-            <span class="chip" data-val="Morning (on waking)">Morning (on waking)</span>
-            <span class="chip" data-val="No trigger">No trigger</span>
+            <span class="chip" data-val="Morning">Morning</span>
+            <span class="chip" data-val="No trigger">None</span>
           </div>
         </div>
 
         <div class="field mt">
-          <label>Relieving factors</label>
-          <input type="text" id="relief" placeholder="e.g. Analgesics, cold water, nothing relieves">
+          <label>Relieving Factors</label>
+          <input type="text" id="relief" placeholder="Analgesics, cold water">
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title"><span class="snum">3</span> Clinical findings</div>
+        <div class="card-title"><span class="snum">3</span> Clinical Findings</div>
         <div class="g2" style="gap:16px">
-          <div class="field"><label>Swelling present?</label>
+          <div class="field"><label>Swelling</label>
             <div class="tog-row" id="tog-swelling"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
-          <div class="field"><label>Trismus (difficulty opening)?</label>
+          <div class="field"><label>Trismus</label>
             <div class="tog-row" id="tog-trismus"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
-          <div class="field"><label>Fever present?</label>
+          <div class="field"><label>Fever</label>
             <div class="tog-row" id="tog-fever"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
-          <div class="field"><label>Lymph node enlargement?</label>
+          <div class="field"><label>Lymph Nodes</label>
             <div class="tog-row" id="tog-lymph"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
-          <div class="field"><label>Sinus / fistula present?</label>
+          <div class="field"><label>Sinus/Fistula</label>
             <div class="tog-row" id="tog-sinus"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
-          <div class="field"><label>Mobility of tooth?</label>
+          <div class="field"><label>Mobility</label>
             <div class="tog-row" id="tog-mobility"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
         </div>
 
         <div id="swelling-detail" class="field mt hidden">
-          <label>Swelling details (size, consistency, tender, duration, fluctuant?)</label>
-          <input type="text" id="swelling_details" placeholder="e.g. 2×2 cm, soft, tender, fluctuant, 2 days">
+          <label>Swelling Details</label>
+          <input type="text" id="swelling_details" placeholder="2×2 cm, soft, tender, 2 days">
         </div>
 
-        <div class="field mt"><label>Oral ulcer or lesion?</label>
+        <div class="field mt"><label>Oral Ulcer</label>
           <div class="tog-row" id="tog-ulcer"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
         <div id="ulcer-detail" class="field mt hidden">
-          <label>Ulcer details (size, duration, painful/painless, edges, base color)</label>
-          <input type="text" id="ulcer_details" placeholder="e.g. 1.5 cm, 3 weeks, painless, irregular edges, indurated base">
+          <label>Ulcer Details</label>
+          <input type="text" id="ulcer_details" placeholder="1.5 cm, 3 weeks, painless">
         </div>
 
         <div class="g2 mt">
-          <div class="field"><label>Percussion sensitivity</label>
-            <select id="percussion"><option value="Not tested">Not tested</option><option value="Negative">Negative</option><option value="Positive (tender to percussion)">Positive (tender to percussion)</option><option value="Grossly positive">Grossly positive</option></select></div>
-          <div class="field"><label>Palpation sensitivity</label>
-            <select id="palpation"><option value="Not tested">Not tested</option><option value="Negative">Negative</option><option value="Positive over apex">Positive over apex</option><option value="Positive over swelling">Positive over swelling</option></select></div>
+          <div class="field"><label>Percussion</label>
+            <select id="percussion"><option value="Not tested">Not tested</option><option value="Negative">Negative</option><option value="Positive">Positive</option><option value="Grossly positive">Grossly +</option></select></div>
+          <div class="field"><label>Palpation</label>
+            <select id="palpation"><option value="Not tested">Not tested</option><option value="Negative">Negative</option><option value="Positive over apex">+ Apex</option><option value="Positive over swelling">+ Swelling</option></select></div>
         </div>
 
         <div class="g2 mt">
-          <div class="field"><label>Previous dental treatment?</label>
-            <input type="text" id="previous_treatment" placeholder="e.g. RCT 2 months ago, or None"></div>
-          <div class="field"><label>Recent trauma or injury?</label>
-            <input type="text" id="trauma" placeholder="e.g. Fall 1 week ago, or None"></div>
+          <div class="field"><label>Previous Treatment</label>
+            <input type="text" id="previous_treatment" placeholder="RCT 2 months ago or None"></div>
+          <div class="field"><label>Trauma</label>
+            <input type="text" id="trauma" placeholder="Fall 1 week ago or None"></div>
         </div>
 
-        <div class="field mt"><label>Additional clinical notes</label>
-          <input type="text" id="extra_notes" placeholder="e.g. Deep caries visible on 36, discoloured tooth, halitosis present"></div>
+        <div class="field mt"><label>Additional Notes</label>
+          <input type="text" id="extra_notes" placeholder="Deep caries on 36, discoloration"></div>
       </div>
 
-      <button class="btn-primary" id="analyze-btn" onclick="analyze()">🔍 Analyze Case</button>
+      <button class="btn-primary" id="analyze-btn" onclick="analyze()">⚡ Analyze Case</button>
     </div>
 
     <!-- Response -->
     <div id="response-view" class="hidden">
       <div class="res-card">
         <div class="res-hdr">
-          <span style="font-weight:600;font-size:15px">Clinical Analysis</span>
-          <span id="patient-tag" style="font-size:13px;color:var(--text2);background:var(--surface2);padding:3px 10px;border-radius:20px;border:1px solid var(--border)"></span>
+          <span>Clinical Analysis</span>
+          <span id="patient-tag"></span>
         </div>
         <div class="res-body" id="ai-response">Analyzing...</div>
         <div class="disclaimer" id="disclaimer" style="display:none">
-          ⚠️ AI-assisted suggestion only. Final clinical decision rests with the treating dentist.
+          AI-assisted suggestion only. Final clinical decision rests with the treating dentist.
         </div>
         <div class="res-actions" id="res-actions" style="display:none">
-          <button class="btn-secondary btn-green" onclick="saveCase()">💾 Save Case</button>
-          <button class="btn-secondary" onclick="copyResponse()">📋 Copy Analysis</button>
+          <button class="btn-secondary btn-green" onclick="saveCase()">Save Case</button>
+          <button class="btn-secondary" onclick="copyResponse()">Copy</button>
         </div>
         <div class="fup-wrap">
-          <div class="fup-label">Ask a follow-up question about this case</div>
+          <div class="fup-label">Follow-up Question</div>
           <div class="fup-row">
-            <input type="text" id="followup-input" placeholder="e.g. Should I refer? Alternative if penicillin allergy?">
-            <button onclick="askFollowup()">Ask ↵</button>
+            <input type="text" id="followup-input" placeholder="Alternative if penicillin allergy?">
+            <button onclick="askFollowup()">Ask</button>
           </div>
         </div>
       </div>
-      <button class="btn-secondary btn-full" onclick="newPatient()">+ Start New Patient</button>
+      <button class="btn-secondary btn-full" onclick="newPatient()">+ New Patient</button>
     </div>
   </div>
 
-  <!-- ══ HISTORY ══ -->
+  <!-- ═══ HISTORY ═══ -->
   <div id="pg-history" class="pg">
     <div class="search-bar">
-      <input type="text" id="search-input" placeholder="Search by name, complaint, diagnosis..." oninput="renderHistory()">
+      <input type="text" id="search-input" placeholder="Search cases..." oninput="renderHistory()">
       <button class="btn-secondary" onclick="renderHistory()">Search</button>
     </div>
     <div id="history-list"></div>
   </div>
 
-  <!-- ══ ANALYTICS ══ -->
+  <!-- ═══ ANALYTICS ═══ -->
   <div id="pg-analytics" class="pg">
     <div class="stat-grid" id="stat-grid"></div>
     <div class="chart-section">
-      <div class="chart-title">Cases by pain character</div>
+      <div class="chart-title">Pain Character Distribution</div>
       <div id="chart-pain"></div>
     </div>
     <div class="chart-section">
-      <div class="chart-title">Cases by trigger</div>
+      <div class="chart-title">Trigger Frequency</div>
       <div id="chart-trigger"></div>
     </div>
     <div class="chart-section">
-      <div class="chart-title">Red flag frequency</div>
+      <div class="chart-title">Red Flag Analysis</div>
       <div id="chart-flags"></div>
     </div>
   </div>
 
+  <!-- ═══ SETTINGS ═══ -->
+  <div id="pg-settings" class="pg">
+
+    <div class="card">
+      <div class="card-title"><span class="snum">🔑</span> Groq API Key</div>
+
+      <div id="settings-key-status" style="
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 18px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        border: 1px solid;
+      "></div>
+
+      <div class="field">
+        <label>Your Groq API Key</label>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <input type="password" id="settings-api-input" placeholder="Paste your Groq key here  (gsk_...)" autocomplete="off" style="flex:1;" oninput="refreshSettingsStatus()" />
+          <button class="btn-secondary" id="settings-toggle-btn" onclick="settingsToggleVisibility()" style="white-space:nowrap;flex-shrink:0;min-height:52px;padding:0 18px;">Show</button>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
+        <button class="btn-primary" style="flex:1; min-width:160px;" onclick="settingsSaveKey()">Save Key</button>
+        <button class="btn-secondary btn-red" style="flex-shrink:0;" onclick="settingsClearKey()">Clear &amp; Use Default</button>
+      </div>
+
+      <div style="margin-top:20px; padding:16px 18px; background:var(--bg-surface-2); border-radius:12px; border:1px solid var(--border);">
+        <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:10px;">How to get your own key</div>
+        <div style="font-size:13px; color:var(--text-dim); line-height:1.8;">
+          1. Go to <strong style="color:var(--text);">console.groq.com</strong> and create a free account.<br>
+          2. Click <strong style="color:var(--text);">API Keys</strong> in the left sidebar.<br>
+          3. Click <strong style="color:var(--text);">Create API Key</strong>, give it a name and copy it.<br>
+          4. Paste it above and click <strong style="color:var(--text);">Save Key</strong>.
+        </div>
+      </div>
+
+      <div style="margin-top:16px; padding:12px 16px; background:rgba(255,159,10,0.08); border-left:3px solid var(--accent-warning); border-radius:0 8px 8px 0; font-size:12px; color:var(--accent-warning); font-weight:500; line-height:1.6;">
+        ⚠️ Your key is stored only in this browser's local storage — it is never transmitted anywhere except directly to Groq's API. Clear it anytime using the button above.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="snum">ℹ</span> About This App</div>
+      <div style="font-size:13px; color:var(--text-dim); line-height:1.8;">
+        <strong style="color:var(--text);">Dental CDSS</strong> is an AI-powered Clinical Decision Support System for dental house surgeons in India.<br><br>
+        Powered by <strong style="color:var(--text);">LLaMA 3.3 70B</strong> via Groq, it provides diagnosis, investigations, and weight-based prescription recommendations based on the patient's clinical profile.<br><br>
+        All case data is stored locally in your browser using IndexedDB and never leaves your device.
+      </div>
+    </div>
+
+  </div>
+
 </div>
 
-<!-- Case detail modal -->
+<!-- Modal -->
 <div class="modal-overlay hidden" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal">
     <div class="modal-hdr">
@@ -353,7 +1488,7 @@ input:focus,select:focus{border-color:var(--blue-border)}
     </div>
     <div class="modal-body" id="modal-body"></div>
     <div class="modal-footer">
-      <button class="btn-secondary btn-red" onclick="deleteCase()">🗑 Delete</button>
+      <button class="btn-secondary btn-red" onclick="deleteCase()">Delete</button>
       <button class="btn-secondary" onclick="closeModalDirect()">Close</button>
     </div>
   </div>
@@ -361,12 +1496,16 @@ input:focus,select:focus{border-color:var(--blue-border)}
 
 <script>
 // ══════════════════════════════════════════════════
-// API KEY — replace with your new key after regenerating
+// API KEY
 // ══════════════════════════════════════════════════
-const GROQ_API_KEY = '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';
+const DEFAULT_API_KEY = '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';
+function getApiKey() {
+  const stored = localStorage.getItem('groq_api_key');
+  return (stored && stored.trim()) ? stored.trim() : DEFAULT_API_KEY;
+}
 
 // ══════════════════════════════════════════════════
-// IMPROVED SYSTEM PROMPT
+// SYSTEM PROMPT
 // ══════════════════════════════════════════════════
 const SYSTEM_PROMPT = `You are an experienced senior dental clinician and consultant with 20+ years of practice in India, helping house surgeons make accurate clinical decisions.
 
@@ -481,6 +1620,26 @@ let currentModalId = null;
 let db = null;
 
 // ══════════════════════════════════════════════════
+// RIPPLE EFFECT
+// ══════════════════════════════════════════════════
+function createRipple(e, element) {
+  const ripple = document.createElement('span');
+  ripple.classList.add('ripple');
+  const rect = element.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+  ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+  element.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 600);
+}
+
+// Apply ripple to buttons
+document.querySelectorAll('.btn-primary, .btn-secondary, .chip, .tog').forEach(el => {
+  el.addEventListener('click', (e) => createRipple(e, el));
+});
+
+// ══════════════════════════════════════════════════
 // INDEXEDDB
 // ══════════════════════════════════════════════════
 function initDB() {
@@ -534,6 +1693,7 @@ function switchTab(name) {
   document.querySelectorAll('.pg').forEach(p => p.classList.toggle('active', p.id === 'pg-' + name));
   if (name === 'history') renderHistory();
   if (name === 'analytics') renderAnalytics();
+  if (name === 'settings') loadSettingsPage();
 }
 
 // ══════════════════════════════════════════════════
@@ -679,7 +1839,7 @@ Check interactions with current medications (${p.medications}).`;
 async function callGroq(messages) {
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getApiKey()}` },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
       temperature: 0.2,
@@ -712,7 +1872,7 @@ async function analyze() {
   const disc = document.getElementById('disclaimer');
   const acts = document.getElementById('res-actions');
   respEl.className = 'res-body loading';
-  respEl.textContent = 'Analyzing with Groq AI (LLaMA 3.3 70B) — please wait...';
+  respEl.textContent = 'Analyzing with Groq AI (LLaMA 3.3 70B)...';
   disc.style.display = 'none'; acts.style.display = 'none';
 
   history = [{ role: 'user', content: buildPrompt(p) }];
@@ -731,7 +1891,7 @@ async function analyze() {
     respEl.textContent = '❌ Error: ' + e.message + '\n\nPlease check your API key and internet connection.';
   }
 
-  btn.disabled = false; btn.textContent = '🔍 Analyze Case';
+  btn.disabled = false; btn.textContent = '⚡ Analyze Case';
 }
 
 // ══════════════════════════════════════════════════
@@ -776,9 +1936,9 @@ async function saveCase() {
   try {
     await saveToDb(record);
     const btn = document.querySelector('.btn-green');
-    btn.textContent = '✅ Saved!';
+    btn.textContent = '✓ Saved';
     btn.disabled = true;
-    setTimeout(() => { btn.textContent = '💾 Save Case'; btn.disabled = false; }, 2000);
+    setTimeout(() => { btn.textContent = 'Save Case'; btn.disabled = false; }, 2000);
   } catch(e) {
     alert('Could not save: ' + e.message);
   }
@@ -788,8 +1948,8 @@ function copyResponse() {
   const text = document.getElementById('ai-response').textContent;
   navigator.clipboard.writeText(text).then(() => {
     const btn = document.querySelectorAll('.res-actions .btn-secondary')[1];
-    btn.textContent = '✅ Copied!';
-    setTimeout(() => { btn.textContent = '📋 Copy Analysis'; }, 2000);
+    btn.textContent = '✓ Copied';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
   });
 }
 
@@ -829,7 +1989,7 @@ async function renderHistory() {
   );
 
   if (!cases.length) {
-    list.innerHTML = `<div class="empty-state"><div class="es-icon">📋</div><p>${q ? 'No cases match your search.' : 'No cases saved yet. Analyze a case and click Save.'}</p></div>`;
+    list.innerHTML = `<div class="empty-state"><div class="es-icon">📋</div><p>${q ? 'No cases match your search.' : 'No cases saved yet.'}</p></div>`;
     return;
   }
 
@@ -840,7 +2000,7 @@ async function renderHistory() {
     if (c.fever === 'yes') flags.push('<span class="tag tag-red">Fever</span>');
     if (c.swelling === 'yes') flags.push('<span class="tag tag-amber">Swelling</span>');
     if (c.trismus === 'yes') flags.push('<span class="tag tag-red">Trismus</span>');
-    if (c.lymph_nodes === 'yes') flags.push('<span class="tag tag-amber">Lymphadenopathy</span>');
+    if (c.lymph_nodes === 'yes') flags.push('<span class="tag tag-amber">Lymph</span>');
     if (c.ulcer === 'yes') flags.push('<span class="tag tag-red">Ulcer</span>');
     const painTags = (c.pain_type || '').split(',').slice(0,2).map(p => `<span class="tag tag-blue">${p.trim()}</span>`).join('');
     return `<div class="case-card" onclick="openModal(${c.id})">
@@ -900,10 +2060,10 @@ async function renderAnalytics() {
   const avgAge = n ? Math.round(cases.reduce((s, c) => s + (parseInt(c.age) || 0), 0) / n) : 0;
 
   document.getElementById('stat-grid').innerHTML = `
-    <div class="stat-card"><div class="stat-label">Total Cases</div><div class="stat-val">${n}</div><div class="stat-sub">saved in database</div></div>
-    <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-val">${thisMonth}</div><div class="stat-sub">cases analyzed</div></div>
-    <div class="stat-card"><div class="stat-label">Red Flag Cases</div><div class="stat-val" style="color:var(--red-text)">${withFlags}</div><div class="stat-sub">${n ? Math.round(withFlags/n*100) : 0}% of total</div></div>
-    <div class="stat-card"><div class="stat-label">Avg Patient Age</div><div class="stat-val">${avgAge || '—'}</div><div class="stat-sub">years</div></div>`;
+    <div class="stat-card"><div class="stat-label">Total Cases</div><div class="stat-val">${n}</div><div class="stat-sub">saved</div></div>
+    <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-val">${thisMonth}</div><div class="stat-sub">analyzed</div></div>
+    <div class="stat-card"><div class="stat-label">Red Flags</div><div class="stat-val" style="color:var(--accent-danger)">${withFlags}</div><div class="stat-sub">${n ? Math.round(withFlags/n*100) : 0}% of total</div></div>
+    <div class="stat-card"><div class="stat-label">Avg Age</div><div class="stat-val">${avgAge || '—'}</div><div class="stat-sub">years</div></div>`;
 
   if (!n) {
     ['chart-pain','chart-trigger','chart-flags'].forEach(id => {
@@ -953,6 +2113,140 @@ function renderBarChart(containerId, data, total, colors) {
       <div class="bar-count">${Math.round(count/total*100)}%</div>
     </div>`;
   }).join('');
+}
+
+// ══════════════════════════════════════════════════
+// SETTINGS PAGE
+// ══════════════════════════════════════════════════
+function loadSettingsPage() {
+  const stored = localStorage.getItem('groq_api_key') || '';
+  const input = document.getElementById('settings-api-input');
+  input.value = stored;
+  input.type = 'password';
+  document.getElementById('settings-toggle-btn').textContent = 'Show';
+  refreshSettingsStatus();
+}
+
+function refreshSettingsStatus() {
+  const statusEl = document.getElementById('settings-key-status');
+  const inputVal = document.getElementById('settings-api-input').value.trim();
+  const stored = localStorage.getItem('groq_api_key');
+  const usingCustom = inputVal || stored;
+  if (usingCustom) {
+    statusEl.style.background = 'rgba(0,122,255,0.08)';
+    statusEl.style.borderColor = 'rgba(0,122,255,0.25)';
+    statusEl.style.color = 'var(--accent-info)';
+    statusEl.innerHTML = '🔑 &nbsp;Custom API key active — your key will be used for all analyses';
+  } else {
+    statusEl.style.background = 'rgba(52,199,89,0.08)';
+    statusEl.style.borderColor = 'rgba(52,199,89,0.25)';
+    statusEl.style.color = 'var(--accent-success)';
+    statusEl.innerHTML = '✅ &nbsp;Using built-in API key — works out of the box, no setup needed';
+  }
+}
+
+function settingsSaveKey() {
+  const key = document.getElementById('settings-api-input').value.trim();
+  if (key && !key.startsWith('gsk_')) {
+    alert('That doesn\'t look like a valid Groq key — it should start with gsk_. Please check and try again.');
+    return;
+  }
+  if (key) {
+    localStorage.setItem('groq_api_key', key);
+  } else {
+    localStorage.removeItem('groq_api_key');
+  }
+  refreshSettingsStatus();
+  const btn = document.querySelector('#pg-settings .btn-primary');
+  btn.textContent = '✓ Saved!';
+  btn.disabled = true;
+  setTimeout(() => { btn.textContent = 'Save Key'; btn.disabled = false; }, 2000);
+}
+
+function settingsClearKey() {
+  localStorage.removeItem('groq_api_key');
+  document.getElementById('settings-api-input').value = '';
+  document.getElementById('settings-api-input').type = 'password';
+  document.getElementById('settings-toggle-btn').textContent = 'Show';
+  refreshSettingsStatus();
+}
+
+function settingsToggleVisibility() {
+  const input = document.getElementById('settings-api-input');
+  const btn = document.getElementById('settings-toggle-btn');
+  if (input.type === 'password') { input.type = 'text'; btn.textContent = 'Hide'; }
+  else { input.type = 'password'; btn.textContent = 'Show'; }
+}
+
+// ══════════════════════════════════════════════════
+// API KEY MODAL
+// ══════════════════════════════════════════════════
+function openApiModal() {
+  const stored = localStorage.getItem('groq_api_key') || '';
+  const input = document.getElementById('api-key-input');
+  input.value = stored;
+  input.type = 'password';
+  document.getElementById('toggle-vis-btn').textContent = 'Show';
+  updateApiStatus();
+  document.getElementById('api-modal-overlay').classList.remove('hidden');
+}
+
+function closeApiModal() {
+  document.getElementById('api-modal-overlay').classList.add('hidden');
+}
+
+function closeApiModalOnBg(e) {
+  if (e.target.id === 'api-modal-overlay') closeApiModal();
+}
+
+function saveApiKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (key && !key.startsWith('gsk_')) {
+    alert('That doesn\'t look like a valid Groq key (should start with gsk_). Please check and try again.');
+    return;
+  }
+  if (key) {
+    localStorage.setItem('groq_api_key', key);
+  } else {
+    localStorage.removeItem('groq_api_key');
+  }
+  closeApiModal();
+  const btn = document.querySelector('.hdr-settings-btn');
+  const orig = btn.innerHTML;
+  btn.innerHTML = '&#x2705;';
+  setTimeout(() => { btn.innerHTML = orig; }, 1500);
+}
+
+function clearApiKey() {
+  localStorage.removeItem('groq_api_key');
+  document.getElementById('api-key-input').value = '';
+  updateApiStatus();
+}
+
+function toggleKeyVisibility() {
+  const input = document.getElementById('api-key-input');
+  const btn = document.getElementById('toggle-vis-btn');
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = 'Hide';
+  } else {
+    input.type = 'password';
+    btn.textContent = 'Show';
+  }
+}
+
+function updateApiStatus() {
+  const badge = document.getElementById('api-status-badge');
+  const inputVal = document.getElementById('api-key-input').value.trim();
+  const storedKey = localStorage.getItem('groq_api_key');
+  const activeCustom = inputVal || storedKey;
+  if (activeCustom) {
+    badge.className = 'api-status using-custom';
+    badge.textContent = '🔑 Custom API key will be used';
+  } else {
+    badge.className = 'api-status using-default';
+    badge.textContent = '✅ Using built-in API key';
+  }
 }
 
 // ══════════════════════════════════════════════════
