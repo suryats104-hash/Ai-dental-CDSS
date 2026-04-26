@@ -145,109 +145,6 @@ body::before{
 
 .hdr:hover .hdr-icon{transform: scale(1.05);}
 
-.hdr-settings-btn{
-  margin-left: auto;
-  width: 36px;
-  height: 36px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  cursor: pointer;
-  color: var(--text-dim);
-  transition: all 0.2s var(--ease-out);
-  flex-shrink: 0;
-}
-.hdr-settings-btn:hover{
-  background: var(--bg-surface-2);
-  border-color: var(--border-highlight);
-  color: var(--text);
-  transform: rotate(30deg);
-}
-
-/* ── API Key Modal ── */
-.api-modal-overlay{
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(8px);
-  z-index: 300;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-.api-modal-overlay.hidden{display:none;}
-.api-modal{
-  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-elev) 100%);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  width: 100%;
-  max-width: 480px;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.4);
-  overflow: hidden;
-}
-.api-modal-hdr{
-  padding: 18px 20px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(180deg, rgba(0,0,0,0.04) 0%, transparent 100%);
-}
-.api-modal-hdr h3{
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-}
-.api-modal-body{ padding: 20px; }
-.api-modal-body p{
-  font-size: 12px;
-  color: var(--text-dim);
-  margin-bottom: 14px;
-  line-height: 1.6;
-}
-.api-key-input-row{
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.api-key-input-row input{
-  flex: 1;
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 13px;
-  letter-spacing: 0.02em;
-}
-.api-status{
-  font-size: 12px;
-  padding: 10px 14px;
-  border-radius: var(--r-md);
-  margin-bottom: 16px;
-  font-weight: 500;
-}
-.api-status.using-default{
-  background: rgba(52,199,89,0.12);
-  color: var(--accent-success);
-  border: 1px solid rgba(52,199,89,0.25);
-}
-.api-status.using-custom{
-  background: rgba(0,122,255,0.12);
-  color: var(--accent-info);
-  border: 1px solid rgba(0,122,255,0.25);
-}
-.api-modal-footer{
-  padding: 14px 20px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  background: var(--bg-surface-2);
-}
-
 .hdr-title{
   font-size: 16px;
   font-weight: 600;
@@ -1158,6 +1055,539 @@ input::placeholder{color: var(--text-muted);}
   text-align: center;
 }
 
+/* ── Odontogram ── */
+.odontogram-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: var(--bg-surface-2);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+
+.odontogram-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quadrant-label {
+  width: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: right;
+}
+
+.tooth-row {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+}
+
+.tooth {
+  flex: 1;
+  aspect-ratio: 0.75;
+  min-width: 36px;
+  max-width: 48px;
+  background: linear-gradient(180deg, #fff 0%, var(--bg-surface-2) 100%);
+  border: 2px solid var(--border);
+  border-radius: 6px 6px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+.tooth::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.8) 0%, transparent 100%);
+  border-radius: 6px 6px 0 0;
+}
+
+.tooth:hover {
+  border-color: var(--accent-info);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+}
+
+.tooth.selected {
+  background: linear-gradient(180deg, var(--accent-info) 0%, var(--accent-primary) 100%);
+  border-color: var(--accent-primary);
+  color: #fff;
+  box-shadow: 0 4px 16px var(--accent-info-glow);
+}
+
+.tooth.selected::before {
+  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+}
+
+.tooth-number {
+  font-size: 10px;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.selected-teeth-display {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: var(--bg-surface);
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+
+.selected-teeth-display.has-selection {
+  color: var(--accent-info);
+  font-weight: 600;
+  border-color: var(--accent-info);
+  background: rgba(0, 122, 255, 0.05);
+}
+
+/* ── Image Upload ── */
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: var(--r-lg);
+  padding: 40px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  background: var(--bg-surface-2);
+}
+
+.upload-area:hover {
+  border-color: var(--accent-info);
+  background: rgba(0, 122, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.upload-area.dragover {
+  border-color: var(--accent-success);
+  background: rgba(52, 199, 89, 0.1);
+  transform: scale(1.02);
+}
+
+.upload-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+
+.upload-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.upload-subtext {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.upload-formats {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.image-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.image-preview {
+  position: relative;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  aspect-ratio: 1;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-preview .image-type {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 6px 10px;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.image-preview .image-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-full);
+  background: var(--accent-danger);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s var(--ease-out);
+}
+
+.image-preview .image-remove:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(255, 59, 48, 0.4);
+}
+
+.image-preview .image-status {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 4px 8px;
+  border-radius: var(--r-full);
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.image-status.pending {
+  background: var(--accent-warning);
+  color: #fff;
+}
+
+.image-status.analyzed {
+  background: var(--accent-success);
+  color: #fff;
+}
+
+/* Image Analysis Result */
+.image-analysis-result {
+  margin-top: 20px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.analysis-header {
+  padding: 16px 20px;
+  background: var(--bg-surface-2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.analysis-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.analysis-content {
+  padding: 20px;
+}
+
+.analysis-placeholder {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.analysis-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.feature-tag {
+  padding: 6px 12px;
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.analysis-result-text {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.analysis-result-text.loading {
+  color: var(--text-muted);
+  font-style: italic;
+  position: relative;
+}
+
+.analysis-result-text.loading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+  animation: loadingBar 1.5s infinite;
+}
+
+/* ── Settings Page ── */
+.field-hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.api-status {
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: var(--r-md);
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.api-status.success {
+  background: rgba(52, 199, 89, 0.1);
+  color: var(--accent-success);
+  border: 1px solid var(--accent-success);
+}
+
+.api-status.error {
+  background: rgba(255, 59, 48, 0.1);
+  color: var(--accent-danger);
+  border: 1px solid var(--accent-danger);
+}
+
+.api-status.loading {
+  background: rgba(0, 122, 255, 0.1);
+  color: var(--accent-info);
+  border: 1px solid var(--accent-info);
+}
+
+.steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-full);
+  background: var(--accent-primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px var(--accent-primary-glow);
+}
+
+.step-content {
+  flex: 1;
+  padding-top: 4px;
+}
+
+.step-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.step-desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.step-desc a {
+  color: var(--accent-info);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.step-desc a:hover {
+  text-decoration: underline;
+}
+
+.step-desc code {
+  background: var(--bg-surface-2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  font-size: 12px;
+  color: var(--accent-info);
+}
+
+.step-warning {
+  margin-top: 8px;
+  padding: 10px 14px;
+  background: rgba(255, 159, 10, 0.1);
+  border-left: 3px solid var(--accent-warning);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  font-size: 12px;
+  color: var(--accent-warning);
+  font-weight: 500;
+}
+
+.info-box {
+  margin-top: 20px;
+  padding: 18px 20px;
+  background: rgba(0, 122, 255, 0.08);
+  border: 1px solid rgba(0, 122, 255, 0.2);
+  border-radius: var(--r-md);
+}
+
+.info-box strong {
+  display: block;
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.info-box p {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.model-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .model-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.model-card {
+  padding: 20px;
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  text-align: center;
+  transition: all 0.2s var(--ease-out);
+}
+
+.model-card:hover {
+  border-color: var(--accent-info);
+  transform: translateY(-2px);
+}
+
+.model-icon {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.model-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.model-desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.model-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--accent-primary);
+  color: #fff;
+  border-radius: var(--r-full);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.privacy-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.privacy-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.privacy-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.privacy-item strong {
+  display: block;
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.privacy-item p {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin: 0;
+}
+
 /* ── Utility ── */
 .hidden{display:none!important}
 
@@ -1201,31 +1631,6 @@ input::placeholder{color: var(--text-muted);}
     <div class="hdr-title">Dental CDSS <span class="bdg bdg-green">AI</span><span class="bdg bdg-blue">LLaMA 3.3</span></div>
     <div class="hdr-sub">Clinical Decision Support System</div>
   </div>
-  <button class="hdr-settings-btn" onclick="openApiModal()" title="API Key Settings">&#9881;</button>
-</div>
-
-<!-- API Key Modal -->
-<div class="api-modal-overlay hidden" id="api-modal-overlay" onclick="closeApiModalOnBg(event)">
-  <div class="api-modal">
-    <div class="api-modal-hdr">
-      <h3>&#9881; API Key Settings</h3>
-      <button class="modal-close" onclick="closeApiModal()">&#x2715;</button>
-    </div>
-    <div class="api-modal-body">
-      <div id="api-status-badge" class="api-status using-default">&#x2705; Using built-in API key</div>
-      <p>Enter your own Groq API key below to use it instead of the built-in one. Your key is saved only in your browser's local storage.</p>
-      <div class="api-key-input-row">
-        <input type="password" id="api-key-input" placeholder="gsk_..." autocomplete="off" oninput="updateApiStatus()" />
-        <button class="btn-secondary" onclick="toggleKeyVisibility()" id="toggle-vis-btn" style="white-space:nowrap;min-height:50px">Show</button>
-      </div>
-      <p style="margin-top:-4px; font-size:11px; color:var(--text-muted);">Get a free Groq key at <strong>console.groq.com</strong></p>
-    </div>
-    <div class="api-modal-footer">
-      <button class="btn-secondary btn-red" onclick="clearApiKey()">Clear Key</button>
-      <button class="btn-secondary" onclick="closeApiModal()">Cancel</button>
-      <button class="btn-primary" style="width:auto;padding:12px 24px" onclick="saveApiKey()">Save Key</button>
-    </div>
-  </div>
 </div>
 
 <!-- Tabs -->
@@ -1233,7 +1638,7 @@ input::placeholder{color: var(--text-muted);}
   <div class="tab active" data-tab="new-case" onclick="switchTab('new-case')">New Case</div>
   <div class="tab" data-tab="history" onclick="switchTab('history')">History</div>
   <div class="tab" data-tab="analytics" onclick="switchTab('analytics')">Analytics</div>
-  <div class="tab" data-tab="settings" onclick="switchTab('settings')">⚙️ Settings</div>
+  <div class="tab" data-tab="settings" onclick="switchTab('settings')">Settings</div>
 </div>
 
 <div class="body">
@@ -1317,8 +1722,72 @@ input::placeholder{color: var(--text-muted);}
         </div>
       </div>
 
+      <!-- Odontogram - Tooth Selection -->
       <div class="card">
-        <div class="card-title"><span class="snum">3</span> Clinical Findings</div>
+        <div class="card-title"><span class="snum">3</span> Tooth Selection (Odontogram)</div>
+        <div class="field">
+          <label>Select Affected Teeth <span>(click to toggle)</span></label>
+          <div class="odontogram-container">
+            <div class="odontogram-section">
+              <div class="quadrant-label">Upper Right (Q1)</div>
+              <div class="tooth-row">
+                <div class="tooth" data-tooth="18" onclick="toggleTooth(this)">18</div>
+                <div class="tooth" data-tooth="17" onclick="toggleTooth(this)">17</div>
+                <div class="tooth" data-tooth="16" onclick="toggleTooth(this)">16</div>
+                <div class="tooth" data-tooth="15" onclick="toggleTooth(this)">15</div>
+                <div class="tooth" data-tooth="14" onclick="toggleTooth(this)">14</div>
+                <div class="tooth" data-tooth="13" onclick="toggleTooth(this)">13</div>
+                <div class="tooth" data-tooth="12" onclick="toggleTooth(this)">12</div>
+                <div class="tooth" data-tooth="11" onclick="toggleTooth(this)">11</div>
+              </div>
+            </div>
+            <div class="odontogram-section">
+              <div class="quadrant-label">Upper Left (Q2)</div>
+              <div class="tooth-row">
+                <div class="tooth" data-tooth="21" onclick="toggleTooth(this)">21</div>
+                <div class="tooth" data-tooth="22" onclick="toggleTooth(this)">22</div>
+                <div class="tooth" data-tooth="23" onclick="toggleTooth(this)">23</div>
+                <div class="tooth" data-tooth="24" onclick="toggleTooth(this)">24</div>
+                <div class="tooth" data-tooth="25" onclick="toggleTooth(this)">25</div>
+                <div class="tooth" data-tooth="26" onclick="toggleTooth(this)">26</div>
+                <div class="tooth" data-tooth="27" onclick="toggleTooth(this)">27</div>
+                <div class="tooth" data-tooth="28" onclick="toggleTooth(this)">28</div>
+              </div>
+            </div>
+            <div class="odontogram-section">
+              <div class="quadrant-label">Lower Left (Q3)</div>
+              <div class="tooth-row">
+                <div class="tooth" data-tooth="31" onclick="toggleTooth(this)">31</div>
+                <div class="tooth" data-tooth="32" onclick="toggleTooth(this)">32</div>
+                <div class="tooth" data-tooth="33" onclick="toggleTooth(this)">33</div>
+                <div class="tooth" data-tooth="34" onclick="toggleTooth(this)">34</div>
+                <div class="tooth" data-tooth="35" onclick="toggleTooth(this)">35</div>
+                <div class="tooth" data-tooth="36" onclick="toggleTooth(this)">36</div>
+                <div class="tooth" data-tooth="37" onclick="toggleTooth(this)">37</div>
+                <div class="tooth" data-tooth="38" onclick="toggleTooth(this)">38</div>
+              </div>
+            </div>
+            <div class="odontogram-section">
+              <div class="quadrant-label">Lower Right (Q4)</div>
+              <div class="tooth-row">
+                <div class="tooth" data-tooth="48" onclick="toggleTooth(this)">48</div>
+                <div class="tooth" data-tooth="47" onclick="toggleTooth(this)">47</div>
+                <div class="tooth" data-tooth="46" onclick="toggleTooth(this)">46</div>
+                <div class="tooth" data-tooth="45" onclick="toggleTooth(this)">45</div>
+                <div class="tooth" data-tooth="44" onclick="toggleTooth(this)">44</div>
+                <div class="tooth" data-tooth="43" onclick="toggleTooth(this)">43</div>
+                <div class="tooth" data-tooth="42" onclick="toggleTooth(this)">42</div>
+                <div class="tooth" data-tooth="41" onclick="toggleTooth(this)">41</div>
+              </div>
+            </div>
+            <input type="hidden" id="selected_teeth" value="">
+          </div>
+          <div class="selected-teeth-display" id="selected-teeth-display">No teeth selected</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="snum">4</span> Clinical Findings</div>
         <div class="g2" style="gap:16px">
           <div class="field"><label>Swelling</label>
             <div class="tog-row" id="tog-swelling"><div class="tog" data-val="yes">Yes</div><div class="tog no" data-val="no">No</div></div></div>
@@ -1362,6 +1831,43 @@ input::placeholder{color: var(--text-muted);}
 
         <div class="field mt"><label>Additional Notes</label>
           <input type="text" id="extra_notes" placeholder="Deep caries on 36, discoloration"></div>
+      </div>
+
+      <!-- Radiograph/Image Upload Section -->
+      <div class="card">
+        <div class="card-title"><span class="snum">5</span> Radiograph / Image Upload</div>
+        <div class="field">
+          <label>Upload X-ray or Oral Image</label>
+          <div class="upload-area" id="upload-area" onclick="document.getElementById('image-input').click()">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">Click to upload image</div>
+            <div class="upload-subtext">Supports: IOPA, OPG, CBCT screenshots, oral lesion photos</div>
+            <div class="upload-formats">JPG, PNG, WEBP (Max 10MB)</div>
+          </div>
+          <input type="file" id="image-input" accept="image/*" multiple onchange="handleImageUpload(event)" style="display:none">
+
+          <!-- Image Preview Grid -->
+          <div class="image-preview-grid" id="image-preview-grid"></div>
+
+          <!-- AI Analysis Result -->
+          <div class="image-analysis-result hidden" id="image-analysis-result">
+            <div class="analysis-header">
+              <span class="analysis-title">🔬 AI Image Analysis</span>
+              <button class="btn-secondary" onclick="analyzeImages()" id="analyze-image-btn">Analyze Images</button>
+            </div>
+            <div class="analysis-content" id="analysis-content">
+              <div class="analysis-placeholder">Upload images and click "Analyze Images" for AI-powered detection of:</div>
+              <div class="analysis-features">
+                <div class="feature-tag">Hidden Caries</div>
+                <div class="feature-tag">Periapical Radiolucencies</div>
+                <div class="feature-tag">Bone Loss Patterns</div>
+                <div class="feature-tag">Ulcer Types</div>
+                <div class="feature-tag">Impactions</div>
+                <div class="feature-tag">Root Fractures</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <button class="btn-primary" id="analyze-btn" onclick="analyze()">⚡ Analyze Case</button>
@@ -1422,59 +1928,116 @@ input::placeholder{color: var(--text-muted);}
 
   <!-- ═══ SETTINGS ═══ -->
   <div id="pg-settings" class="pg">
-
     <div class="card">
-      <div class="card-title"><span class="snum">🔑</span> Groq API Key</div>
-
-      <div id="settings-key-status" style="
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 14px 18px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        font-size: 13px;
-        font-weight: 600;
-        border: 1px solid;
-      "></div>
+      <div class="card-title"><span class="snum">1</span> API Configuration</div>
 
       <div class="field">
-        <label>Your Groq API Key</label>
-        <div style="display:flex; gap:10px; align-items:center;">
-          <input type="password" id="settings-api-input" placeholder="Paste your Groq key here  (gsk_...)" autocomplete="off" style="flex:1;" oninput="refreshSettingsStatus()" />
-          <button class="btn-secondary" id="settings-toggle-btn" onclick="settingsToggleVisibility()" style="white-space:nowrap;flex-shrink:0;min-height:52px;padding:0 18px;">Show</button>
+        <label>Groq API Key</label>
+        <input type="text" id="settings-api-key" placeholder="gsk_..." autocomplete="off">
+        <div class="field-hint">
+          Your API key is stored locally in your browser and never sent to any server except Groq API.
+          Leave blank to use the default key.
         </div>
       </div>
 
-      <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
-        <button class="btn-primary" style="flex:1; min-width:160px;" onclick="settingsSaveKey()">Save Key</button>
-        <button class="btn-secondary btn-red" style="flex-shrink:0;" onclick="settingsClearKey()">Clear &amp; Use Default</button>
+      <div class="g2 mt">
+        <button class="btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+        <button class="btn-secondary" onclick="testApiKey()">🧪 Test Connection</button>
       </div>
 
-      <div style="margin-top:20px; padding:16px 18px; background:var(--bg-surface-2); border-radius:12px; border:1px solid var(--border);">
-        <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:10px;">How to get your own key</div>
-        <div style="font-size:13px; color:var(--text-dim); line-height:1.8;">
-          1. Go to <strong style="color:var(--text);">console.groq.com</strong> and create a free account.<br>
-          2. Click <strong style="color:var(--text);">API Keys</strong> in the left sidebar.<br>
-          3. Click <strong style="color:var(--text);">Create API Key</strong>, give it a name and copy it.<br>
-          4. Paste it above and click <strong style="color:var(--text);">Save Key</strong>.
+      <div class="api-status hidden" id="api-status"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="snum">2</span> How to Get Your Groq API Key</div>
+
+      <div class="steps-container">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-title">Visit Groq Cloud Console</div>
+            <div class="step-desc">Go to <a href="https://console.groq.com" target="_blank" rel="noopener">console.groq.com</a> and sign up or log in to your account.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-title">Navigate to API Keys</div>
+            <div class="step-desc">Click on "API Keys" in the left sidebar menu.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-title">Create New Key</div>
+            <div class="step-desc">Click "Create API Key", give it a name (e.g., "Dental CDSS"), and optionally set expiration/permissions.</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <div class="step-title">Copy Your Key</div>
+            <div class="step-desc">Copy the generated key (starts with <code>gsk_</code>) and paste it into the API Key field above.</div>
+            <div class="step-warning">⚠️ Save your key somewhere safe — you can only see it once when created!</div>
+          </div>
         </div>
       </div>
 
-      <div style="margin-top:16px; padding:12px 16px; background:rgba(255,159,10,0.08); border-left:3px solid var(--accent-warning); border-radius:0 8px 8px 0; font-size:12px; color:var(--accent-warning); font-weight:500; line-height:1.6;">
-        ⚠️ Your key is stored only in this browser's local storage — it is never transmitted anywhere except directly to Groq's API. Clear it anytime using the button above.
+      <div class="info-box">
+        <strong>ℹ️ About Groq API</strong>
+        <p>Groq provides free tier access to powerful AI models including LLaMA 3.3 70B for text analysis and LLaMA 3.2 90B Vision for image analysis. The free tier includes 30 requests per minute, which is sufficient for most dental practices.</p>
       </div>
     </div>
 
     <div class="card">
-      <div class="card-title"><span class="snum">ℹ</span> About This App</div>
-      <div style="font-size:13px; color:var(--text-dim); line-height:1.8;">
-        <strong style="color:var(--text);">Dental CDSS</strong> is an AI-powered Clinical Decision Support System for dental house surgeons in India.<br><br>
-        Powered by <strong style="color:var(--text);">LLaMA 3.3 70B</strong> via Groq, it provides diagnosis, investigations, and weight-based prescription recommendations based on the patient's clinical profile.<br><br>
-        All case data is stored locally in your browser using IndexedDB and never leaves your device.
+      <div class="card-title"><span class="snum">3</span> Model Information</div>
+
+      <div class="model-grid">
+        <div class="model-card">
+          <div class="model-icon">📝</div>
+          <div class="model-name">LLaMA 3.3 70B</div>
+          <div class="model-desc">Text analysis for clinical diagnosis and treatment planning</div>
+          <div class="model-tag">Primary Model</div>
+        </div>
+        <div class="model-card">
+          <div class="model-icon">👁️</div>
+          <div class="model-name">LLaMA 3.2 90B Vision</div>
+          <div class="model-desc">Image analysis for radiographs and oral lesion photographs</div>
+          <div class="model-tag">Vision Model</div>
+        </div>
       </div>
     </div>
 
+    <div class="card">
+      <div class="card-title"><span class="snum">4</span> Data & Privacy</div>
+
+      <div class="privacy-info">
+        <div class="privacy-item">
+          <span class="privacy-icon">🔒</span>
+          <div>
+            <strong>Local Storage</strong>
+            <p>Your API key and case history are stored locally in your browser using IndexedDB. Nothing is sent to our servers.</p>
+          </div>
+        </div>
+        <div class="privacy-item">
+          <span class="privacy-icon">☁️</span>
+          <div>
+            <strong>API Communication</strong>
+            <p>Patient data is sent only to Groq API servers for analysis. Groq's privacy policy applies to data processed through their API.</p>
+          </div>
+        </div>
+        <div class="privacy-item">
+          <span class="privacy-icon">🗑️</span>
+          <div>
+            <strong>Data Deletion</strong>
+            <p>Clear your browser data to delete all stored information. Individual cases can be deleted from the History tab.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -1498,11 +2061,7 @@ input::placeholder{color: var(--text-muted);}
 // ══════════════════════════════════════════════════
 // API KEY
 // ══════════════════════════════════════════════════
-const DEFAULT_API_KEY = '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';
-function getApiKey() {
-  const stored = localStorage.getItem('groq_api_key');
-  return (stored && stored.trim()) ? stored.trim() : DEFAULT_API_KEY;
-}
+const GROQ_API_KEY = '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';
 
 // ══════════════════════════════════════════════════
 // SYSTEM PROMPT
@@ -1615,9 +2174,13 @@ This is AI-assisted suggestion. Final clinical decision rests with the treating 
 let history = [];
 let selectedPain = [];
 let selectedTriggers = [];
+let selectedTeeth = [];
+let uploadedImages = [];
+let imageAnalysisResult = null;
 let currentCaseData = null;
 let currentModalId = null;
 let db = null;
+let customApiKey = null;
 
 // ══════════════════════════════════════════════════
 // RIPPLE EFFECT
@@ -1693,7 +2256,7 @@ function switchTab(name) {
   document.querySelectorAll('.pg').forEach(p => p.classList.toggle('active', p.id === 'pg-' + name));
   if (name === 'history') renderHistory();
   if (name === 'analytics') renderAnalytics();
-  if (name === 'settings') loadSettingsPage();
+  if (name === 'settings') loadSettings();
 }
 
 // ══════════════════════════════════════════════════
@@ -1746,6 +2309,131 @@ setupToggle('tog-ulcer',
   () => document.getElementById('ulcer-detail').classList.add('hidden'));
 
 // ══════════════════════════════════════════════════
+// TOOTH SELECTION (ODONTOGRAM)
+// ══════════════════════════════════════════════════
+function toggleTooth(el) {
+  const toothNum = el.dataset.tooth;
+  el.classList.toggle('selected');
+  const idx = selectedTeeth.indexOf(toothNum);
+  if (idx > -1) {
+    selectedTeeth.splice(idx, 1);
+  } else {
+    selectedTeeth.push(toothNum);
+    selectedTeeth.sort((a, b) => parseInt(a) - parseInt(b));
+  }
+  document.getElementById('selected_teeth').value = selectedTeeth.join(',');
+  updateTeethDisplay();
+}
+
+function updateTeethDisplay() {
+  const display = document.getElementById('selected-teeth-display');
+  if (selectedTeeth.length === 0) {
+    display.textContent = 'No teeth selected';
+    display.classList.remove('has-selection');
+  } else {
+    const toothNames = selectedTeeth.map(t => {
+      const q = Math.floor(parseInt(t) / 10);
+      const names = {
+        '1': 'UR', '2': 'UL', '3': 'LL', '4': 'LR'
+      };
+      return `${names[q]}${t[1]}`;
+    });
+    display.textContent = `Selected: ${toothNames.join(', ')} (FDI: ${selectedTeeth.join(', ')})`;
+    display.classList.add('has-selection');
+  }
+}
+
+// ══════════════════════════════════════════════════
+// IMAGE UPLOAD HANDLING
+// ══════════════════════════════════════════════════
+const uploadArea = document.getElementById('upload-area');
+
+uploadArea.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  uploadArea.classList.add('dragover');
+});
+
+uploadArea.addEventListener('dragleave', () => {
+  uploadArea.classList.remove('dragover');
+});
+
+uploadArea.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadArea.classList.remove('dragover');
+  const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+  handleFiles(files);
+});
+
+function handleImageUpload(event) {
+  const files = Array.from(event.target.files).filter(f => f.type.startsWith('image/'));
+  handleFiles(files);
+  event.target.value = '';
+}
+
+async function handleFiles(files) {
+  for (const file of files) {
+    if (file.size > 10 * 1024 * 1024) {
+      alert(`${file.name} exceeds 10MB limit.`);
+      continue;
+    }
+    const imageData = await fileToDataURL(file);
+    const imageObj = {
+      id: Date.now() + Math.random(),
+      name: file.name,
+      type: detectImageType(file.name),
+      dataUrl: imageData,
+      file: file,
+      status: 'pending'
+    };
+    uploadedImages.push(imageObj);
+  }
+  renderImagePreviews();
+  if (uploadedImages.length > 0) {
+    document.getElementById('image-analysis-result').classList.remove('hidden');
+  }
+}
+
+function fileToDataURL(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.readAsDataURL(file);
+  });
+}
+
+function detectImageType(filename) {
+  const lower = filename.toLowerCase();
+  if (lower.includes('opg') || lower.includes('pan')) return 'OPG';
+  if (lower.includes('iopa') || lower.includes('periapical')) return 'IOPA';
+  if (lower.includes('bw') || lower.includes('bitewing')) return 'Bitewing';
+  if (lower.includes('cbct') || lower.includes('ct')) return 'CBCT';
+  if (lower.includes('ulcer') || lower.includes('lesion') || lower.includes('oral')) return 'Oral Lesion';
+  return 'Dental Image';
+}
+
+function renderImagePreviews() {
+  const grid = document.getElementById('image-preview-grid');
+  grid.innerHTML = uploadedImages.map(img => `
+    <div class="image-preview" data-id="${img.id}">
+      <img src="${img.dataUrl}" alt="${img.name}">
+      <div class="image-type">${img.type}</div>
+      <span class="image-status ${img.status}">${img.status}</span>
+      <button class="image-remove" onclick="removeImage(${img.id}, event)">×</button>
+    </div>
+  `).join('');
+}
+
+function removeImage(id, event) {
+  event.stopPropagation();
+  uploadedImages = uploadedImages.filter(img => img.id !== id);
+  renderImagePreviews();
+  if (uploadedImages.length === 0) {
+    document.getElementById('image-analysis-result').classList.add('hidden');
+    imageAnalysisResult = null;
+  }
+}
+
+// ══════════════════════════════════════════════════
 // DATA GATHERING
 // ══════════════════════════════════════════════════
 function val(id) { return document.getElementById(id)?.value?.trim() || ''; }
@@ -1782,6 +2470,8 @@ function gather() {
     previous_treatment: val('previous_treatment') || 'None',
     trauma:             val('trauma') || 'None',
     extra_notes:        val('extra_notes') || 'None',
+    selected_teeth:     selectedTeeth.join(', ') || 'Not specified',
+    image_analysis:     imageAnalysisResult || null,
   };
 }
 
@@ -1793,13 +2483,17 @@ function buildPrompt(p) {
   if (p.ulcer === 'yes' && p.ulcer_details?.toLowerCase().includes('week')) redFlags.push('Oral ulcer (check duration)');
   if (p.mobility === 'yes') redFlags.push('Tooth mobility');
 
-  return `PATIENT CLINICAL SUMMARY
+  let prompt = `PATIENT CLINICAL SUMMARY
 ━━━━━━━━━━━━━━━━━━━━━━━━━
 Patient: ${p.name} | ${p.gender} | ${p.age} years | ${p.weight} kg
 Allergies: ${p.allergies}
 Systemic conditions: ${p.medical_history}
 Current medications: ${p.medications}
 ${redFlags.length ? '⚠️ RED FLAGS NOTED: ' + redFlags.join(', ') : ''}
+
+SELECTED TEETH (FDI NOTATION)
+━━━━━━━━━━━━━━━━━━━━━━━━━
+${p.selected_teeth !== 'Not specified' ? 'Affected teeth: ' + p.selected_teeth : 'No specific teeth selected'}
 
 HISTORY
 ━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1825,26 +2519,46 @@ Tooth mobility: ${p.mobility}
 Percussion: ${p.percussion}
 Palpation: ${p.palpation}
 Oral ulcer/lesion: ${p.ulcer}${p.ulcer_details ? ' — ' + p.ulcer_details : ''}
-Additional notes: ${p.extra_notes}
+Additional notes: ${p.extra_notes}`;
+
+  if (p.image_analysis) {
+    prompt += `
+
+━━━━━━━━━━━━━━━━━━━━━━━━━
+🔬 AI IMAGE ANALYSIS FINDINGS
+━━━━━━━━━━━━━━━━━━━━━━━━━
+${p.image_analysis}
+
+IMPORTANT: Integrate the above image analysis findings with your clinical assessment. The AI has analyzed uploaded radiographs/photographs. Consider these findings in your diagnosis and treatment planning.`;
+  }
+
+  prompt += `
 
 Please provide complete clinical analysis as per your three-phase format.
 Calculate all drug doses for a ${p.weight} kg patient.
 Account for all listed allergies (${p.allergies}) and systemic conditions (${p.medical_history}).
 Check interactions with current medications (${p.medications}).`;
+
+  return prompt;
 }
 
 // ══════════════════════════════════════════════════
 // GROQ API CALL
 // ══════════════════════════════════════════════════
-async function callGroq(messages) {
+function getApiKey() {
+  return customApiKey || GROQ_API_KEY;
+}
+
+async function callGroq(messages, useVision = false) {
+  const apiKey = getApiKey();
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getApiKey()}` },
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
     body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
+      model: useVision ? 'llama-3.2-90b-vision-preview' : 'llama-3.3-70b-versatile',
       temperature: 0.2,
       max_tokens: 2000,
-      messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages]
+      messages: messages
     })
   });
   if (!res.ok) {
@@ -1852,6 +2566,139 @@ async function callGroq(messages) {
     throw new Error(err?.error?.message || `Groq API error ${res.status}`);
   }
   return (await res.json()).choices[0].message.content;
+}
+
+// ══════════════════════════════════════════════════
+// IMAGE ANALYSIS WITH VISION AI
+// ══════════════════════════════════════════════════
+const IMAGE_ANALYSIS_PROMPT = `You are an expert dental radiologist and oral pathologist. Analyze the provided dental image(s) and provide findings in the following format:
+
+**IMAGE TYPE:** [Identify if OPG, IOPA, Bitewing, CBCT slice, or clinical photograph]
+
+**RADIOGRAPHIC/CLINICAL FINDINGS:**
+- List all observable findings systematically
+- For X-rays: caries, bone levels, periapical status, restorations, impactions, root morphology
+- For photos: lesion type, size, color, borders, location, surface characteristics
+
+**DETAILED ANALYSIS:**
+1. **Tooth-by-Tooth Assessment** (if applicable)
+2. **Bone Assessment** - trabecular pattern, cortical boundaries, bone loss pattern
+3. **Periapical Assessment** - radiolucencies, radiopacities, lamina dura integrity
+4. **Soft Tissue Assessment** (if visible)
+
+**DIFFERENTIAL DIAGNOSIS:**
+- Primary diagnosis with confidence level (High/Medium/Low)
+- Differential diagnoses with distinguishing features
+
+**RED FLAGS:**
+- Any suspicious findings requiring urgent attention or biopsy
+- Signs of malignancy, aggressive pathology, or systemic disease
+
+**RECOMMENDATIONS:**
+- Additional imaging needed
+- Biopsy referral if indicated
+- Specialist referral if needed
+
+Be thorough but concise. Use proper dental terminology. If image quality is poor, mention limitations.`;
+
+async function analyzeImages() {
+  const pendingImages = uploadedImages.filter(img => img.status === 'pending');
+  if (pendingImages.length === 0) {
+    document.getElementById('analysis-content').innerHTML = '<div class="analysis-result-text">All images have been analyzed. Upload new images to re-analyze.</div>';
+    return;
+  }
+
+  const btn = document.getElementById('analyze-image-btn');
+  btn.disabled = true;
+  btn.textContent = 'Analyzing...';
+
+  const contentEl = document.getElementById('analysis-content');
+  contentEl.innerHTML = '<div class="analysis-result-text loading">Analyzing images with AI vision model... This may take 30-60 seconds per image.</div>';
+
+  try {
+    let allResults = [];
+
+    for (const img of pendingImages) {
+      // Update UI to show processing
+      img.status = 'analyzing';
+      renderImagePreviews();
+
+      // Convert base64 to blob for API
+      const base64Data = img.dataUrl.split(',')[1];
+      const mimeType = img.file.type;
+
+      // Use Groq with vision capability - send as base64 in message
+      const messages = [{
+        role: 'user',
+        content: [
+          { type: 'text', text: IMAGE_ANALYSIS_PROMPT },
+          { type: 'image_url', image_url: { url: img.dataUrl } }
+        ]
+      }];
+
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getApiKey()}`
+        },
+        body: JSON.stringify({
+          model: 'llama-3.2-90b-vision-preview',
+          temperature: 0.2,
+          max_tokens: 1500,
+          messages: messages
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `Groq Vision API error ${res.status}`);
+      }
+
+      const result = (await res.json()).choices[0].message.content;
+
+      img.status = 'analyzed';
+      img.analysis = result;
+      allResults.push({
+        image: img,
+        analysis: result
+      });
+
+      renderImagePreviews();
+    }
+
+    // Display all results
+    displayImageAnalysisResults(allResults);
+
+  } catch (e) {
+    contentEl.innerHTML = `<div class="analysis-result-text" style="color: var(--accent-danger)">❌ Error: ${e.message}\n\nPlease check your API key and ensure images are valid. Groq's vision model (llama-3.2-90b-vision-preview) is being used.</div>`;
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Re-analyze Images';
+}
+
+function displayImageAnalysisResults(results) {
+  const contentEl = document.getElementById('analysis-content');
+
+  let html = '';
+  results.forEach((result, idx) => {
+    html += `
+      <div class="analysis-image-result" style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); ${idx === results.length - 1 ? 'border-bottom: none;' : ''}">
+        <div style="display: flex; gap: 12px; margin-bottom: 12px; align-items: center;">
+          <img src="${result.image.dataUrl}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
+          <div>
+            <div style="font-size: 13px; font-weight: 600; color: var(--text);">${result.image.name}</div>
+            <div style="font-size: 11px; color: var(--text-dim);">${result.image.type}</div>
+          </div>
+        </div>
+        <div class="analysis-result-text">${result.analysis}</div>
+      </div>
+    `;
+  });
+
+  contentEl.innerHTML = html;
+  imageAnalysisResult = results.map(r => r.analysis).join('\n\n---\n\n');
 }
 
 // ══════════════════════════════════════════════════
@@ -1957,8 +2804,9 @@ function copyResponse() {
 // NEW PATIENT
 // ══════════════════════════════════════════════════
 function newPatient() {
-  history = []; selectedPain.length = 0; selectedTriggers.length = 0; currentCaseData = null;
+  history = []; selectedPain.length = 0; selectedTriggers.length = 0; selectedTeeth.length = 0; uploadedImages = []; imageAnalysisResult = null; currentCaseData = null;
   document.querySelectorAll('.chip').forEach(c => c.classList.remove('sel'));
+  document.querySelectorAll('.tooth').forEach(t => t.classList.remove('selected'));
   document.querySelectorAll('input[type=text], input[type=number]').forEach(i => { i.value = ''; });
   document.querySelectorAll('select').forEach(s => { s.selectedIndex = 0; });
   document.querySelectorAll('.tog').forEach(b => b.classList.remove('yes', 'no'));
@@ -1966,6 +2814,12 @@ function newPatient() {
     const no = row.querySelector('[data-val="no"]'); if (no) no.classList.add('no');
   });
   ['swelling-detail', 'ulcer-detail'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  document.getElementById('selected_teeth').value = '';
+  document.getElementById('selected-teeth-display').textContent = 'No teeth selected';
+  document.getElementById('selected-teeth-display').classList.remove('has-selection');
+  document.getElementById('image-preview-grid').innerHTML = '';
+  document.getElementById('image-analysis-result').classList.add('hidden');
+  document.getElementById('analysis-content').innerHTML = '<div class="analysis-placeholder">Upload images and click "Analyze Images" for AI-powered detection of:</div><div class="analysis-features"><div class="feature-tag">Hidden Caries</div><div class="feature-tag">Periapical Radiolucencies</div><div class="feature-tag">Bone Loss Patterns</div><div class="feature-tag">Ulcer Types</div><div class="feature-tag">Impactions</div><div class="feature-tag">Root Fractures</div></div>';
   document.getElementById('ai-response').textContent = '';
   document.getElementById('disclaimer').style.display = 'none';
   document.getElementById('res-actions').style.display = 'none';
@@ -2116,136 +2970,73 @@ function renderBarChart(containerId, data, total, colors) {
 }
 
 // ══════════════════════════════════════════════════
-// SETTINGS PAGE
+// SETTINGS MANAGEMENT
 // ══════════════════════════════════════════════════
-function loadSettingsPage() {
-  const stored = localStorage.getItem('groq_api_key') || '';
-  const input = document.getElementById('settings-api-input');
-  input.value = stored;
-  input.type = 'password';
-  document.getElementById('settings-toggle-btn').textContent = 'Show';
-  refreshSettingsStatus();
-}
-
-function refreshSettingsStatus() {
-  const statusEl = document.getElementById('settings-key-status');
-  const inputVal = document.getElementById('settings-api-input').value.trim();
-  const stored = localStorage.getItem('groq_api_key');
-  const usingCustom = inputVal || stored;
-  if (usingCustom) {
-    statusEl.style.background = 'rgba(0,122,255,0.08)';
-    statusEl.style.borderColor = 'rgba(0,122,255,0.25)';
-    statusEl.style.color = 'var(--accent-info)';
-    statusEl.innerHTML = '🔑 &nbsp;Custom API key active — your key will be used for all analyses';
+function saveSettings() {
+  const apiKey = document.getElementById('settings-api-key').value.trim();
+  if (apiKey) {
+    localStorage.setItem('groqApiKey', apiKey);
+    customApiKey = apiKey;
+    showApiStatus('✓ API key saved successfully!', 'success');
   } else {
-    statusEl.style.background = 'rgba(52,199,89,0.08)';
-    statusEl.style.borderColor = 'rgba(52,199,89,0.25)';
-    statusEl.style.color = 'var(--accent-success)';
-    statusEl.innerHTML = '✅ &nbsp;Using built-in API key — works out of the box, no setup needed';
+    localStorage.removeItem('groqApiKey');
+    customApiKey = null;
+    showApiStatus('✓ Using default API key', 'success');
   }
 }
 
-function settingsSaveKey() {
-  const key = document.getElementById('settings-api-input').value.trim();
-  if (key && !key.startsWith('gsk_')) {
-    alert('That doesn\'t look like a valid Groq key — it should start with gsk_. Please check and try again.');
-    return;
-  }
-  if (key) {
-    localStorage.setItem('groq_api_key', key);
-  } else {
-    localStorage.removeItem('groq_api_key');
-  }
-  refreshSettingsStatus();
-  const btn = document.querySelector('#pg-settings .btn-primary');
-  btn.textContent = '✓ Saved!';
-  btn.disabled = true;
-  setTimeout(() => { btn.textContent = 'Save Key'; btn.disabled = false; }, 2000);
-}
-
-function settingsClearKey() {
-  localStorage.removeItem('groq_api_key');
-  document.getElementById('settings-api-input').value = '';
-  document.getElementById('settings-api-input').type = 'password';
-  document.getElementById('settings-toggle-btn').textContent = 'Show';
-  refreshSettingsStatus();
-}
-
-function settingsToggleVisibility() {
-  const input = document.getElementById('settings-api-input');
-  const btn = document.getElementById('settings-toggle-btn');
-  if (input.type === 'password') { input.type = 'text'; btn.textContent = 'Hide'; }
-  else { input.type = 'password'; btn.textContent = 'Show'; }
-}
-
-// ══════════════════════════════════════════════════
-// API KEY MODAL
-// ══════════════════════════════════════════════════
-function openApiModal() {
-  const stored = localStorage.getItem('groq_api_key') || '';
-  const input = document.getElementById('api-key-input');
-  input.value = stored;
-  input.type = 'password';
-  document.getElementById('toggle-vis-btn').textContent = 'Show';
-  updateApiStatus();
-  document.getElementById('api-modal-overlay').classList.remove('hidden');
-}
-
-function closeApiModal() {
-  document.getElementById('api-modal-overlay').classList.add('hidden');
-}
-
-function closeApiModalOnBg(e) {
-  if (e.target.id === 'api-modal-overlay') closeApiModal();
-}
-
-function saveApiKey() {
-  const key = document.getElementById('api-key-input').value.trim();
-  if (key && !key.startsWith('gsk_')) {
-    alert('That doesn\'t look like a valid Groq key (should start with gsk_). Please check and try again.');
-    return;
-  }
-  if (key) {
-    localStorage.setItem('groq_api_key', key);
-  } else {
-    localStorage.removeItem('groq_api_key');
-  }
-  closeApiModal();
-  const btn = document.querySelector('.hdr-settings-btn');
-  const orig = btn.innerHTML;
-  btn.innerHTML = '&#x2705;';
-  setTimeout(() => { btn.innerHTML = orig; }, 1500);
-}
-
-function clearApiKey() {
-  localStorage.removeItem('groq_api_key');
-  document.getElementById('api-key-input').value = '';
-  updateApiStatus();
-}
-
-function toggleKeyVisibility() {
-  const input = document.getElementById('api-key-input');
-  const btn = document.getElementById('toggle-vis-btn');
-  if (input.type === 'password') {
-    input.type = 'text';
-    btn.textContent = 'Hide';
-  } else {
-    input.type = 'password';
-    btn.textContent = 'Show';
+function loadSettings() {
+  const savedKey = localStorage.getItem('groqApiKey');
+  if (savedKey) {
+    customApiKey = savedKey;
+    document.getElementById('settings-api-key').value = savedKey;
   }
 }
 
-function updateApiStatus() {
-  const badge = document.getElementById('api-status-badge');
-  const inputVal = document.getElementById('api-key-input').value.trim();
-  const storedKey = localStorage.getItem('groq_api_key');
-  const activeCustom = inputVal || storedKey;
-  if (activeCustom) {
-    badge.className = 'api-status using-custom';
-    badge.textContent = '🔑 Custom API key will be used';
-  } else {
-    badge.className = 'api-status using-default';
-    badge.textContent = '✅ Using built-in API key';
+function showApiStatus(message, type) {
+  const statusEl = document.getElementById('api-status');
+  statusEl.textContent = message;
+  statusEl.className = 'api-status ' + type;
+  statusEl.classList.remove('hidden');
+
+  if (type === 'success' || type === 'error') {
+    setTimeout(() => {
+      statusEl.classList.add('hidden');
+    }, 5000);
+  }
+}
+
+async function testApiKey() {
+  const apiKey = document.getElementById('settings-api-key').value.trim() || getApiKey();
+  const statusEl = document.getElementById('api-status');
+
+  statusEl.textContent = '⏳ Testing connection to Groq API...';
+  statusEl.className = 'api-status loading';
+  statusEl.classList.remove('hidden');
+
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        temperature: 0.2,
+        max_tokens: 50,
+        messages: [{ role: 'user', content: 'Say "OK" if you can read this.' }]
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `API error ${res.status}`);
+    }
+
+    showApiStatus('✓ Connection successful! API key is valid.', 'success');
+  } catch (e) {
+    showApiStatus(`✗ Connection failed: ${e.message}`, 'error');
   }
 }
 
@@ -2253,6 +3044,7 @@ function updateApiStatus() {
 // INIT
 // ══════════════════════════════════════════════════
 initDB().then(() => {
+  loadSettings();
   console.log('Dental CDSS ready. Database initialized.');
 }).catch(e => {
   console.error('DB init failed:', e);
