@@ -1731,53 +1731,53 @@ input::placeholder{color: var(--text-muted);}
             <div class="odontogram-section">
               <div class="quadrant-label">Upper Right (Q1)</div>
               <div class="tooth-row">
-                <div class="tooth" data-tooth="18" onclick="toggleTooth(this)">18</div>
-                <div class="tooth" data-tooth="17" onclick="toggleTooth(this)">17</div>
-                <div class="tooth" data-tooth="16" onclick="toggleTooth(this)">16</div>
-                <div class="tooth" data-tooth="15" onclick="toggleTooth(this)">15</div>
-                <div class="tooth" data-tooth="14" onclick="toggleTooth(this)">14</div>
-                <div class="tooth" data-tooth="13" onclick="toggleTooth(this)">13</div>
-                <div class="tooth" data-tooth="12" onclick="toggleTooth(this)">12</div>
                 <div class="tooth" data-tooth="11" onclick="toggleTooth(this)">11</div>
+                <div class="tooth" data-tooth="12" onclick="toggleTooth(this)">12</div>
+                <div class="tooth" data-tooth="13" onclick="toggleTooth(this)">13</div>
+                <div class="tooth" data-tooth="14" onclick="toggleTooth(this)">14</div>
+                <div class="tooth" data-tooth="15" onclick="toggleTooth(this)">15</div>
+                <div class="tooth" data-tooth="16" onclick="toggleTooth(this)">16</div>
+                <div class="tooth" data-tooth="17" onclick="toggleTooth(this)">17</div>
+                <div class="tooth" data-tooth="18" onclick="toggleTooth(this)">18</div>
               </div>
             </div>
             <div class="odontogram-section">
               <div class="quadrant-label">Upper Left (Q2)</div>
               <div class="tooth-row">
-                <div class="tooth" data-tooth="21" onclick="toggleTooth(this)">21</div>
-                <div class="tooth" data-tooth="22" onclick="toggleTooth(this)">22</div>
-                <div class="tooth" data-tooth="23" onclick="toggleTooth(this)">23</div>
-                <div class="tooth" data-tooth="24" onclick="toggleTooth(this)">24</div>
-                <div class="tooth" data-tooth="25" onclick="toggleTooth(this)">25</div>
-                <div class="tooth" data-tooth="26" onclick="toggleTooth(this)">26</div>
-                <div class="tooth" data-tooth="27" onclick="toggleTooth(this)">27</div>
                 <div class="tooth" data-tooth="28" onclick="toggleTooth(this)">28</div>
+                <div class="tooth" data-tooth="27" onclick="toggleTooth(this)">27</div>
+                <div class="tooth" data-tooth="26" onclick="toggleTooth(this)">26</div>
+                <div class="tooth" data-tooth="25" onclick="toggleTooth(this)">25</div>
+                <div class="tooth" data-tooth="24" onclick="toggleTooth(this)">24</div>
+                <div class="tooth" data-tooth="23" onclick="toggleTooth(this)">23</div>
+                <div class="tooth" data-tooth="22" onclick="toggleTooth(this)">22</div>
+                <div class="tooth" data-tooth="21" onclick="toggleTooth(this)">21</div>
               </div>
             </div>
             <div class="odontogram-section">
               <div class="quadrant-label">Lower Left (Q3)</div>
               <div class="tooth-row">
-                <div class="tooth" data-tooth="31" onclick="toggleTooth(this)">31</div>
-                <div class="tooth" data-tooth="32" onclick="toggleTooth(this)">32</div>
-                <div class="tooth" data-tooth="33" onclick="toggleTooth(this)">33</div>
-                <div class="tooth" data-tooth="34" onclick="toggleTooth(this)">34</div>
-                <div class="tooth" data-tooth="35" onclick="toggleTooth(this)">35</div>
-                <div class="tooth" data-tooth="36" onclick="toggleTooth(this)">36</div>
-                <div class="tooth" data-tooth="37" onclick="toggleTooth(this)">37</div>
                 <div class="tooth" data-tooth="38" onclick="toggleTooth(this)">38</div>
+                <div class="tooth" data-tooth="37" onclick="toggleTooth(this)">37</div>
+                <div class="tooth" data-tooth="36" onclick="toggleTooth(this)">36</div>
+                <div class="tooth" data-tooth="35" onclick="toggleTooth(this)">35</div>
+                <div class="tooth" data-tooth="34" onclick="toggleTooth(this)">34</div>
+                <div class="tooth" data-tooth="33" onclick="toggleTooth(this)">33</div>
+                <div class="tooth" data-tooth="32" onclick="toggleTooth(this)">32</div>
+                <div class="tooth" data-tooth="31" onclick="toggleTooth(this)">31</div>
               </div>
             </div>
             <div class="odontogram-section">
               <div class="quadrant-label">Lower Right (Q4)</div>
               <div class="tooth-row">
-                <div class="tooth" data-tooth="48" onclick="toggleTooth(this)">48</div>
-                <div class="tooth" data-tooth="47" onclick="toggleTooth(this)">47</div>
-                <div class="tooth" data-tooth="46" onclick="toggleTooth(this)">46</div>
-                <div class="tooth" data-tooth="45" onclick="toggleTooth(this)">45</div>
-                <div class="tooth" data-tooth="44" onclick="toggleTooth(this)">44</div>
-                <div class="tooth" data-tooth="43" onclick="toggleTooth(this)">43</div>
-                <div class="tooth" data-tooth="42" onclick="toggleTooth(this)">42</div>
                 <div class="tooth" data-tooth="41" onclick="toggleTooth(this)">41</div>
+                <div class="tooth" data-tooth="42" onclick="toggleTooth(this)">42</div>
+                <div class="tooth" data-tooth="43" onclick="toggleTooth(this)">43</div>
+                <div class="tooth" data-tooth="44" onclick="toggleTooth(this)">44</div>
+                <div class="tooth" data-tooth="45" onclick="toggleTooth(this)">45</div>
+                <div class="tooth" data-tooth="46" onclick="toggleTooth(this)">46</div>
+                <div class="tooth" data-tooth="47" onclick="toggleTooth(this)">47</div>
+                <div class="tooth" data-tooth="48" onclick="toggleTooth(this)">48</div>
               </div>
             </div>
             <input type="hidden" id="selected_teeth" value="">
@@ -2704,6 +2704,11 @@ async function analyzeImages() {
   const contentEl = document.getElementById('analysis-content');
   contentEl.innerHTML = '<div class="analysis-result-text loading">Analyzing images with AI vision model... This may take 30-60 seconds per image.</div>';
 
+  // Build selected teeth context for image analysis
+  const selectedTeethContext = selectedTeeth.length > 0
+    ? `\n\nSELECTED TEETH FROM ODONTOGRAM (FDI NOTATION):\n${selectedTeeth.join(', ')}\n\nFocus your analysis on these clinically indicated teeth. Correlate radiographic findings with the selected tooth numbers.`
+    : '';
+
   try {
     let allResults = [];
 
@@ -2716,11 +2721,14 @@ async function analyzeImages() {
       const base64Data = img.dataUrl.split(',')[1];
       const mimeType = img.file.type;
 
+      // Build dynamic prompt with selected teeth info
+      const dynamicPrompt = IMAGE_ANALYSIS_PROMPT + selectedTeethContext;
+
       // Use Groq with vision capability - send as base64 in message
       const messages = [{
         role: 'user',
         content: [
-          { type: 'text', text: IMAGE_ANALYSIS_PROMPT },
+          { type: 'text', text: dynamicPrompt },
           { type: 'image_url', image_url: { url: img.dataUrl } }
         ]
       }];
