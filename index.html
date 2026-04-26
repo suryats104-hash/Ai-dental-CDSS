@@ -2555,7 +2555,7 @@ async function callGroq(messages, useVision = false) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
     body: JSON.stringify({
-      model: useVision ? 'llama-3.2-90b-vision-preview' : 'llama-3.3-70b-versatile',
+      model: useVision ? 'llama-3.2-11b-vision-preview' : 'llama-3.3-70b-versatile',
       temperature: 0.2,
       max_tokens: 2000,
       messages: messages
@@ -2643,7 +2643,7 @@ async function analyzeImages() {
           'Authorization': `Bearer ${getApiKey()}`
         },
         body: JSON.stringify({
-          model: 'llama-3.2-90b-vision-preview',
+          model: 'llama-3.2-11b-vision-preview',
           temperature: 0.2,
           max_tokens: 1500,
           messages: messages
@@ -2671,7 +2671,7 @@ async function analyzeImages() {
     displayImageAnalysisResults(allResults);
 
   } catch (e) {
-    contentEl.innerHTML = `<div class="analysis-result-text" style="color: var(--accent-danger)">❌ Error: ${e.message}\n\nPlease check your API key and ensure images are valid. Groq's vision model (llama-3.2-90b-vision-preview) is being used.</div>`;
+    contentEl.innerHTML = `<div class="analysis-result-text" style="color: var(--accent-danger)">❌ Error: ${e.message}\n\nPlease check your API key and ensure images are valid. Groq's vision model (llama-3.2-11b-vision-preview) is being used.</div>`;
   }
 
   btn.disabled = false;
